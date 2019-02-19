@@ -17,6 +17,7 @@ async function getConnection() {
              config.schema.get('db.name')
 
   const dbOptions = {
+    poolSize: 50,    
     keepAlive: 15000,
     socketTimeoutMS: 15000,
     connectTimeoutMS: 15000,

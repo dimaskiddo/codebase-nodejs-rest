@@ -18,6 +18,31 @@ function resData(res, data) {
   res.status(200).json({
     status: true,
     code: 200,
+    message: 'Success',
+    data
+  })
+}
+
+
+// -------------------------------------------------
+// Created Response Function
+function resCreated(res, data) {
+  res.status(201).json({
+    status: true,
+    code: 201,
+    message: 'Success',
+    data
+  })
+}
+
+
+// -------------------------------------------------
+// Updated Response Function
+function resUpdated(res, data) {
+  res.status(204).json({
+    status: true,
+    code: 204,
+    message: 'Success',
     data
   })
 }
@@ -93,6 +118,8 @@ function resAuthenticate(res) {
 module.exports = {
   resOK,
   resData,
+  resCreated,
+  resUpdated,
   resBadRequest,
   resInternalError,
   resNotFound,
