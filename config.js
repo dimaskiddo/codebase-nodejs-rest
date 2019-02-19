@@ -6,16 +6,24 @@ const convict = require('convict')
 // Configuration Schema Variable
 var schema = convict({
   env: {
-    doc: 'The application environment',
+    doc: 'The Application Environment',
     format: ['dev', 'prod', 'test'],
     default: 'dev',
     env: 'NODE_ENV'
   },
   port: {
-    doc: 'The application port',
+    doc: 'The Application Port to Listen',
     format: 'port',
     default: 3000,
     env: 'NODE_PORT'
+  },
+  log: {
+    level: {
+      doc: 'The Application Log Level',
+      format: ['debug', 'verbose', 'info', 'warn', 'error'],
+      default: 'info',
+      env: 'NODE_LOG_LEVEL'
+    }
   },
   db: {
     driver: {

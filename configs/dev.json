@@ -1,6 +1,9 @@
 {
   "env": "dev",
   "port": 3000,
+  "log": {
+    "level" : "debug"
+  },
   "db": {
     "driver": "mongo",
     "host": "127.0.0.1",

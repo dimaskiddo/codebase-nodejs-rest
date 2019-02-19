@@ -1,19 +1,29 @@
 const { createLogger, format, transports } = require('winston')
-const { combine, timestamp, label } = format
+const { combine, timestamp, label, printf } = format
+
+const config = require('../../config')
+const package = require('../../package.json')
 
 
 // -------------------------------------------------
-// Log Format Schema Variable
-var fmt = createLogger({
+// Log Schema Constant
+const schema = printf(({ level, message, label, timestamp, service }) => {
+  return `{"timestamp": "${timestamp}", "level": "${level}", "service": "${service}", "label": "${label}", message": "${message}"}`
+})
+
+
+// -------------------------------------------------
+// Log Send Variable
+var send = (labelTag) => createLogger({
     format: combine(
-      label({ label: 'todo-service-log' }),
+      label({ label: labelTag }),
       timestamp(),
-      format.json()
+      schema
     ),
-    defaultMeta: { service: 'todo-service' },
+    defaultMeta: { service: package.name },
     transports: [
       new transports.Console({
-        level: 'info',
+        level: config.schema.get('log.level'),
         handleExceptions: true,
         json: true,
         colorize: true,
@@ -27,5 +37,5 @@ var fmt = createLogger({
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  fmt
+  send
 }

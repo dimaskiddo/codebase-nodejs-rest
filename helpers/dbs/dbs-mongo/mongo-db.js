@@ -1,90 +1,58 @@
-const validate = require('validate.js');
-const database = require('./mongo-conn')
-const common = require('../../utils/utils-common')
-const logger = require('../../utils/utils-logger')
+const mongo = require('mongodb').MongoClient
+const config = require('../../../config')
+const log = require('../../utils/utils-logger')
 
 
 // -------------------------------------------------
-// DB FindOne Variable
-async function findOne(coll, params) {
-  try {
-    let recordSet = await database.conn.collection(coll).findOne(params)
+// DB Connection Variable
+var conn
 
-    if (validate.isEmpty(recordSet)) {
-      logger.fmt.warn(common.strToTitleCase("Empty RecordSet Data"))
-      return
+
+// -------------------------------------------------
+// DB Get Connect Function
+async function getConnection() {
+ let dbURI = 'mongodb://' + config.schema.get('db.username') + ':' + config.schema.get('db.password') + '@' +
+             config.schema.get('db.host') + ':' + config.schema.get('db.port') + '/' +
+             config.schema.get('db.name')
+
+  const dbOptions = {
+    keepAlive: 15000,
+    socketTimeoutMS: 15000,
+    connectTimeoutMS: 15000,
+    useNewUrlParser: true
+  }
+
+  try {
+    conn = await mongo.connect(dbURI, dbOptions)
+    
+    if (! getPing(conn)) {
+      log.send('mongo-db-get-connection').error("Cannot Get Database Ping")
+      process.exit(1)
     }
-    return recordSet
   } catch(err) {
-    logger.fmt.error(common.strToTitleCase("Cannot Get RecordSet Data"))
-    return
+    log.send('mongo-db-get-connection').error("Cannot Get Database Connection")
+    process.exit(1)
   }
 }
 
 
 // -------------------------------------------------
-// DB FindAll Variable
-async function findAll(coll, params) {
-  try {
-    let recordSet = await database.conn.collection(coll).find(params).toArray()
+// DB Get Ping Function
+async function getPing(conn) {
+  let status = await conn.db.admin().command({ ping: 1 })
 
-    if (validate.isEmpty(recordSet)) {
-      logger.fmt.warn(common.strToTitleCase("Empty RecordSet Data"))
-      return
-    }
-    return recordSet
-  } catch(err) {
-    logger.fmt.error(common.strToTitleCase("Cannot Get RecordSet Data"))
-    return
+  if (status.ok === 1) {
+    return true
   }
-}
 
-
-// -------------------------------------------------
-// DB FindCustom Variable
-async function findCustom(coll, params, limitRow, totalPage, sortField) {
-  try {
-    let paramsSort = {}
-        paramsSort[sortField] = 1
-    let paramsPage = limitRow * (totalPage - 1)
-
-    let recordSet = await database.conn.collection(coll).find(params).sort(paramsSort).limit(limitRow).skip(paramsPage).toArray()
-
-    if (validate.isEmpty(recordSet)) {
-      logger.fmt.warn(common.strToTitleCase("Empty RecordSet Data"))
-      return
-    }
-    return recordSet
-  } catch(err) {
-    logger.fmt.error(common.strToTitleCase("Cannot Get RecordSet Data"))
-    return
-  }
-}
-
-
-// -------------------------------------------------
-// DB CountData Variable
-async function countData(coll, params) {
-  try {
-    let recordSet = await database.conn.collection(coll).count(params)
-
-    if (validate.isEmpty(recordSet)) {
-      logger.fmt.warn(common.strToTitleCase("Empty RecordSet Data"))
-      return
-    }
-    return recordSet
-  } catch(err) {
-    logger.fmt.error(common.strToTitleCase("Cannot Get RecordSet Data"))
-    return
-  }
+  return false
 }
 
 
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  findOne,
-  findAll,
-  findCustom,
-  countData
+  conn,
+  getConnection,
+  getPing
 }

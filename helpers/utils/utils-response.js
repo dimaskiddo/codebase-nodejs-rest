@@ -55,12 +55,15 @@ function resInternalError(res, msg) {
 
 // -------------------------------------------------
 // Not Found Response Function
-function resNotFound(res) {
+function resNotFound(res, msg) {
+	// Set Default Message
+  msg = msg !== undefined ? msg : "Not Found"
+
   res.status(400).json({
     status: false,
     code: 400,
     message: 'Not Found',
-    error: 'Not Found'
+    error: msg
   })
 }
 

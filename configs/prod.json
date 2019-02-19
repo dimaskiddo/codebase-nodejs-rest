@@ -1,6 +1,9 @@
 {
   "env": "prod",
   "port": 3000,
+  "log": {
+    "level" : "info"
+  },
   "db": {
     "driver": "mongo",
     "host": "127.0.0.1",
