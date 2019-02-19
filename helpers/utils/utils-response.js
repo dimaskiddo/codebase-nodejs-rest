@@ -41,7 +41,7 @@ function resBadRequest(res, msg) {
 // -------------------------------------------------
 // Internal Server Error Response Function
 function resInternalError(res, msg) {
-	// Set Default Message
+  // Set Default Message
   msg = msg !== undefined ? msg : "Internal Server Error"
   
   res.status(500).json({
@@ -56,7 +56,7 @@ function resInternalError(res, msg) {
 // -------------------------------------------------
 // Not Found Response Function
 function resNotFound(res, msg) {
-	// Set Default Message
+  // Set Default Message
   msg = msg !== undefined ? msg : "Not Found"
 
   res.status(400).json({
