@@ -1,5 +1,6 @@
 const mongo = require('mongodb').MongoClient
 const config = require('../../../config')
+const common = require('../../utils/utils-common')
 const log = require('../../utils/utils-logger')
 
 
@@ -24,13 +25,13 @@ async function getConnection() {
 
   try {
     conn = await mongo.connect(dbURI, dbOptions)
-    
-    if (! getPing(conn)) {
-      log.send('mongo-db-get-connection').error("Cannot Get Database Ping")
+
+    if (! await getPing()) {
+      log.send('mongo-db-get-connection').error("Cannot Get Mongo Database Ping")
       process.exit(1)
     }
   } catch(err) {
-    log.send('mongo-db-get-connection').error("Cannot Get Database Connection")
+    log.send('mongo-db-get-connection').error("Cannot Get Mongo Database Connection")
     process.exit(1)
   }
 }
@@ -38,11 +39,16 @@ async function getConnection() {
 
 // -------------------------------------------------
 // DB Get Ping Function
-async function getPing(conn) {
-  let status = await conn.db.admin().command({ ping: 1 })
+async function getPing() {
+  try {
+    let status = await conn.db.admin().command({ ping: 1 })
 
-  if (status.ok === 1) {
-    return true
+    if (status.ok === 1) {
+      return true
+    }
+  } catch(err) {
+    log.send('mongo-db-get-ping').error(common.strToTitleCase(err.message))
+    return false
   }
 
   return false
