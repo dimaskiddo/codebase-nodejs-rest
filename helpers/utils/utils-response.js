@@ -37,7 +37,7 @@ function writeResponseError(res, statusCode, msg, err) {
 // Success Response Function
 function resSuccess(res, msg) {
   // Set Default Message
-  msg = msg !== undefined ? msg : "Success"
+  msg = msg !== undefined ? msg : 'Success'
 
   // Write Response
   writeResponse(res, 200, msg)
@@ -72,7 +72,7 @@ function resUpdated(res, data) {
 // Bad Request Response Function
 function resBadRequest(res, err) {
   // Set Default Message
-  err = err !== undefined ? err : "Bad Request"
+  err = err !== undefined ? err : 'Bad Request'
 
   // Write Response
   writeResponseError(res, 400, 'Bad Request', err)
@@ -83,7 +83,7 @@ function resBadRequest(res, err) {
 // Internal Server Error Response Function
 function resInternalError(res, err) {
   // Set Default Message
-  err = err !== undefined ? err : "Internal Server Error"
+  err = err !== undefined ? err : 'Internal Server Error'
 
   // Write Response
   writeResponseError(res, 500, 'Internal Server Error', err)
@@ -94,7 +94,7 @@ function resInternalError(res, err) {
 // Not Found Response Function
 function resNotFound(res, err) {
   // Set Default Message
-  err = err !== undefined ? err : "Not Found"
+  err = err !== undefined ? err : 'Not Found'
 
   // Write Response
   writeResponseError(res, 400, 'Not Found', err)
@@ -112,7 +112,7 @@ function resUnauthorized(res) {
 // -------------------------------------------------
 // Authenticate Response Function
 function resAuthenticate(res) {
-  res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
+  res.set('WWW-Authenticate', 'Basic realm="Authorization Required"')
   resUnauthorized(res)
 }
 

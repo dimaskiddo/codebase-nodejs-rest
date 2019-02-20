@@ -8,7 +8,7 @@ function index(req, res) {
   let auth = JSON.parse(req.body)
 
   if (auth.username.length === 0 || auth.password.legth === 0) {
-    response.resBadRequest(res, "Invalid Authorizaton")
+    response.resBadRequest(res, 'Invalid Authorizaton')
     return
   }
 

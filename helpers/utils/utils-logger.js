@@ -15,22 +15,22 @@ const schema = printf(({ level, message, label, timestamp, service }) => {
 // -------------------------------------------------
 // Log Send Constant
 const send = (labelTag) => createLogger({
-    format: combine(
-      label({ label: labelTag }),
-      timestamp(),
-      schema
-    ),
-    defaultMeta: { service: package.name },
-    transports: [
-      new transports.Console({
-        level: config.schema.get('log.level'),
-        handleExceptions: true,
-        json: true,
-        colorize: true,
-        timestamp: true
-      })
-    ],
-    exitOnError: false
+  format: combine(
+    label({ label: labelTag }),
+    timestamp(),
+    schema
+  ),
+  defaultMeta: { service: package.name },
+  transports: [
+    new transports.Console({
+      level: config.schema.get('log.level'),
+      handleExceptions: true,
+      json: true,
+      colorize: true,
+      timestamp: true
+    })
+  ],
+  exitOnError: false
 })
 
 

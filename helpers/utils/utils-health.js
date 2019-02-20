@@ -9,18 +9,18 @@ const dbMongo = require('../dbs/dbs-mongo/mongo-db')
 // Health Check Function
 async function healthCheck(res) {
   switch (config.schema.get('db.driver')) {
-    case "mongo":
+    case 'mongo':
       if (! await dbMongo.getPing()) {
-        log.send('service-health').error("Cannot Get Mongo Database Ping")
-        response.resInternalError(res, "Cannot Get Mongo Database Ping")
+        log.send('service-health').error('Cannot Get Mongo Database Ping')
+        response.resInternalError(res, 'Cannot Get Mongo Database Ping')
         return
       }
-      break;
-    case "mysql":
-      break;
+      break
+    case 'mysql':
+      break
   }
 
-  response.resSuccess(res, "Service is Healthy")
+  response.resSuccess(res, 'Service is Healthy')
 }
 
 

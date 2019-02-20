@@ -38,37 +38,37 @@ var schema = convict({
       doc: 'Database Driver',
       format: String,
       default: '',
-      env: "DB_DRIVER"
+      env: 'DB_DRIVER'
     },
     host: {
       doc: 'Database Host',
       format: '*',
       default: '',
-      env: "DB_HOST"
+      env: 'DB_HOST'
     },
     port: {
-      doc: "Database Port",
+      doc: 'Database Port',
       format: 'port',
       default: '',
-      env: "DB_PORT"
+      env: 'DB_PORT'
     },
     username: {
-      doc: "Database Username",
+      doc: 'Database Username',
       format: String,
       default: '',
-      env: "DB_USERNAME"
+      env: 'DB_USERNAME'
     },
     password: {
-      doc: "Database Password",
+      doc: 'Database Password',
       format: String,
       default: '',
-      env: "DB_PASSWORD"
+      env: 'DB_PASSWORD'
     },
     name: {
-      doc: "Database Name",
+      doc: 'Database Name',
       format: String,
       default: '',
-      env: "DB_NAME"
+      env: 'DB_NAME'
     }
   }
 })

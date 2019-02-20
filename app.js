@@ -12,13 +12,13 @@ const app = express()
 // -------------------------------------------------
 // Database Module
 switch (config.schema.get('db.driver')) {
-  case "mongo":
+  case 'mongo':
     if (dbMongo.conn === undefined) {
       dbMongo.getConnection()
     }
-    break;
-  case "mysql":
-    break;
+    break
+  case 'mysql':
+    break
 }
 
 
@@ -49,12 +49,12 @@ app.use('/', require('./routes/index'))
 // Load Default Router Handler to Express Module
 app.get('/favicon.ico', (req, res) => res.status(204))
 
-app.use(function (req, res, next) {
-  log.send('http-access').error("Request Not Found at " + req.url)
-  response.resNotFound(res, "Request Not Found at " + req.url)
+app.use(function (req, res) {
+  log.send('http-access').error('Request Not Found at ' + req.url)
+  response.resNotFound(res, 'Request Not Found at ' + req.url)
 })
 
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
   log.send('http-access').error(common.strToTitleCase(err.message))
   response.resInternalError(res, common.strToTitleCase(err.message))
 })

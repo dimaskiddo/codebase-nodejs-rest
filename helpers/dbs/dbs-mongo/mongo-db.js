@@ -36,13 +36,13 @@ async function getConnection() {
         
         conn = client.db(config.schema.get('db.name'))
         if (! await getPing()) {
-          log.send('mongo-db-get-connection').error("Cannot Get Mongo Database Ping")
+          log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Ping')
           process.exit(1)
         }
 
         return conn
       } else {
-        log.send('mongo-db-get-connection').error("Cannot Get Mongo Database URI")
+        log.send('mongo-db-get-connection').error('Cannot Get Mongo Database URI')
         process.exit(1)
       }
     } catch(err) {
@@ -68,7 +68,7 @@ async function getPing() {
       }
     }
 
-    log.send('mongo-db-get-ping').error("Cannot Get Mongo Database Connection")
+    log.send('mongo-db-get-ping').error('Cannot Get Mongo Database Connection')
     return false
   } catch(err) {
     log.send('mongo-db-get-ping').error(common.strToTitleCase(err.message))
