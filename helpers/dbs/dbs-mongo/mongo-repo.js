@@ -1,5 +1,6 @@
-const validate = require('validate.js');
+const validate = require('validate.js')
 const database = require('./mongo-db')
+const common = require('../../utils/utils-common')
 const log = require('../../utils/utils-logger')
 
 
@@ -26,7 +27,7 @@ async function find(coll, params, sort, limit, page) {
     }
     return recordSet
   } catch(err) {
-    log.send('mongo-repo-find').error("Cannot Get RecordSet Data")
+    log.send('mongo-repo-find').error(common.strToTitleCase(err.message))
     return
   }
 }
@@ -44,7 +45,7 @@ async function findOne(coll, params) {
     }
     return recordSet
   } catch(err) {
-    log.send('mongo-repo-find-one').error("Cannot Get RecordSet Data")
+    log.send('mongo-repo-find-one').error(common.strToTitleCase(err.message))
     return
   }
 }
@@ -62,7 +63,7 @@ async function findAll(coll, params) {
     }
     return recordSet
   } catch(err) {
-    log.send('mongo-repo-find-all').error("Cannot Get RecordSet Data")
+    log.send('mongo-repo-find-all').error(common.strToTitleCase(err.message))
     return
   }
 }
@@ -80,7 +81,7 @@ async function insertOne(coll, data) {
     }
     return true
   } catch(err) {
-    log.send('mongo-repo-insert-one').error("Failed to Insert Data")
+    log.send('mongo-repo-insert-one').error(common.strToTitleCase(err.message))
     return false
   }
 }
@@ -98,7 +99,7 @@ async function insertAll(coll, data) {
     }
     return true
   } catch(err) {
-    log.send('mongo-repo-insert-all').error("Failed to Insert Data")
+    log.send('mongo-repo-insert-all').error(common.strToTitleCase(err.message))
     return false
   }  
 }
@@ -115,7 +116,7 @@ async function updateOne(coll, params, query) {
     }
     return true
   } catch(err) {
-    log.send('mongo-repo-update-one').error("Failed to Update Data")
+    log.send('mongo-repo-update-one').error(common.strToTitleCase(err.message))
     return false
   }
 }
@@ -133,7 +134,7 @@ async function countData(coll, params) {
     }
     return recordSet
   } catch(err) {
-    log.send('mongo-repo-count-data').error("Cannot Get RecordSet Data")
+    log.send('mongo-repo-count-data').error(common.strToTitleCase(err.message))
     return
   }
 }

@@ -13,8 +13,8 @@ const schema = printf(({ level, message, label, timestamp, service }) => {
 
 
 // -------------------------------------------------
-// Log Send Variable
-var send = (labelTag) => createLogger({
+// Log Send Constant
+const send = (labelTag) => createLogger({
     format: combine(
       label({ label: labelTag }),
       timestamp(),

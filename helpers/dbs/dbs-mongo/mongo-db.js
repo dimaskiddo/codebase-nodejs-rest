@@ -42,17 +42,20 @@ async function getConnection() {
 // DB Get Ping Function
 async function getPing() {
   try {
-    let status = await conn.db.admin().command({ ping: 1 })
+    if (conn !== undefined) {
+      let status = await conn.db.admin().command({ ping: 1 })
 
-    if (status.ok === 1) {
-      return true
+      if (status.ok === 1) {
+        return true
+      }
     }
+
+    log.send('mongo-db-get-ping').error("Cannot Get Mongo Database Connection")
+    return false
   } catch(err) {
     log.send('mongo-db-get-ping').error(common.strToTitleCase(err.message))
     return false
   }
-
-  return false
 }
 
 
