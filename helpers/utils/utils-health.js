@@ -20,7 +20,7 @@ async function healthCheck(res) {
       break;
   }
 
-  response.resOK(res, "Service is Healthy")
+  response.resSuccess(res, "Service is Healthy")
 }
 
 

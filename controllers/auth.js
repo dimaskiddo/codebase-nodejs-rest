@@ -13,7 +13,7 @@ function index(req, res) {
   }
 
   if (auth.username === 'user' && auth.password == 'password') {
-    response.resData(res, {token: authJWT.getJWT({username: auth.username})})
+    response.resSuccessData(res, {token: authJWT.getJWT({username: auth.username})})
   }
 }
 

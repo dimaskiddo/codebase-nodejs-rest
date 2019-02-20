@@ -25,6 +25,14 @@ var schema = convict({
       env: 'NODE_LOG_LEVEL'
     }
   },
+  jwt: {
+    expired: {
+      doc: 'JWT Authentication Expiration',
+      format: String,
+      default: '1d',
+      env: 'JWT_EXPIRED'
+    }
+  },
   db: {
     driver: {
       doc: 'Database Driver',

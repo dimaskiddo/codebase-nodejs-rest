@@ -1,10 +1,25 @@
 const helmet = require('helmet')
 const morgan = require('morgan')
 const express = require('express')
+const config = require('./config')
+const dbMongo = require('./helpers/dbs/dbs-mongo/mongo-db')
 const common = require('./helpers/utils/utils-common')
 const response = require('./helpers/utils/utils-response')
 const log = require('./helpers/utils/utils-logger')
 const app = express()
+
+
+// -------------------------------------------------
+// Database Module
+switch (config.schema.get('db.driver')) {
+  case "mongo":
+    if (dbMongo.conn === undefined) {
+      dbMongo.getConnection()
+    }
+    break;
+  case "mysql":
+    break;
+}
 
 
 // -------------------------------------------------

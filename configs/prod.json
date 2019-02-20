@@ -4,8 +4,11 @@
   "log": {
     "level" : "info"
   },
+  "jwt": {
+    "expired": "1d"
+  },
   "db": {
-    "driver": "mongo",
+    "driver": "",
     "host": "127.0.0.1",
     "port": 27017,
     "username": "user",

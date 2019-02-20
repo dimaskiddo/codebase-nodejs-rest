@@ -1,107 +1,111 @@
 // -------------------------------------------------
-// OK Response Function
-function resOK(res, msg) {
-  // Set Default Message
-  msg = msg !== undefined ? msg : "Success"
-
-  res.status(200).json({
+// Write Response Function
+function writeResponse(res, statusCode, msg) {
+  res.status(statusCode).json({
     status: true,
-    code: 200,
+    code: statusCode,
     message: msg
   })
 }
 
 
 // -------------------------------------------------
-// Data Response Function
-function resData(res, data) {
-  res.status(200).json({
+// Write Data Response Function
+function writeResponseData(res, statusCode, msg, data) {
+  res.status(statusCode).json({
     status: true,
-    code: 200,
-    message: 'Success',
-    data
+    code: statusCode,
+    message: msg,
+    data: data
   })
+}
+
+
+// -------------------------------------------------
+// Write Error Response Function
+function writeResponseError(res, statusCode, msg, err) {
+  res.status(statusCode).json({
+    status: true,
+    code: statusCode,
+    message: msg,
+    error: err
+  })
+}
+
+
+// -------------------------------------------------
+// Success Response Function
+function resSuccess(res, msg) {
+  // Set Default Message
+  msg = msg !== undefined ? msg : "Success"
+
+  // Write Response
+  writeResponse(res, 200, msg)
+}
+
+
+// -------------------------------------------------
+// Success Data Response Function
+function resSuccessData(res, data) {
+  // Write Response
+  writeResponseData(res, 200, 'Success', data)
 }
 
 
 // -------------------------------------------------
 // Created Response Function
 function resCreated(res, data) {
-  res.status(201).json({
-    status: true,
-    code: 201,
-    message: 'Success',
-    data
-  })
+  // Write Response
+  writeResponseData(res, 201, 'Created', data)
 }
 
 
 // -------------------------------------------------
 // Updated Response Function
 function resUpdated(res, data) {
-  res.status(204).json({
-    status: true,
-    code: 204,
-    message: 'Success',
-    data
-  })
+  // Write Response
+  writeResponseData(res, 204, 'Updated', data)
 }
 
 
 // -------------------------------------------------
 // Bad Request Response Function
-function resBadRequest(res, msg) {
+function resBadRequest(res, err) {
   // Set Default Message
-  msg = msg !== undefined ? msg : "Bad Request"
-  
-  res.status(400).json({
-    status: false,
-    code: 400,
-    message: 'Bad Request',
-    error: msg
-  })
+  err = err !== undefined ? err : "Bad Request"
+
+  // Write Response
+  writeResponseError(res, 400, 'Bad Request', err)
 }
 
 
 // -------------------------------------------------
 // Internal Server Error Response Function
-function resInternalError(res, msg) {
+function resInternalError(res, err) {
   // Set Default Message
-  msg = msg !== undefined ? msg : "Internal Server Error"
-  
-  res.status(500).json({
-    status: false,
-    code: 500,
-    message: 'Internal Server Error',
-    error: msg
-  })
+  err = err !== undefined ? err : "Internal Server Error"
+
+  // Write Response
+  writeResponseError(res, 500, 'Internal Server Error', err)
 }
 
 
 // -------------------------------------------------
 // Not Found Response Function
-function resNotFound(res, msg) {
+function resNotFound(res, err) {
   // Set Default Message
-  msg = msg !== undefined ? msg : "Not Found"
+  err = err !== undefined ? err : "Not Found"
 
-  res.status(400).json({
-    status: false,
-    code: 400,
-    message: 'Not Found',
-    error: msg
-  })
+  // Write Response
+  writeResponseError(res, 400, 'Not Found', err)
 }
 
 
 // -------------------------------------------------
 // Unauthorized Response Function
 function resUnauthorized(res) {
-  res.status(401).json({
-    status: false,
-    code: 401,
-    message: 'Unauthorized',
-    error: 'Unauthorized'
-  })
+  // Write Response
+  writeResponseError(res, 401, 'Unauthorized', 'Unauthorized')
 }
 
 
@@ -116,8 +120,8 @@ function resAuthenticate(res) {
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  resOK,
-  resData,
+  resSuccess,
+  resSuccessData,
   resCreated,
   resUpdated,
   resBadRequest,

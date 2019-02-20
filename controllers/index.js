@@ -5,7 +5,7 @@ const serviceHealth = require('../helpers/utils/utils-health')
 // -------------------------------------------------
 // Index Root Function
 function index(req, res) {
-  response.resOK(res, "NodeJS API Framework is running")
+  response.resSuccess(res, "NodeJS API Framework is running")
 }
 
 

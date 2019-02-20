@@ -1,12 +1,13 @@
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
+const config = require('../../config')
 const response = require('../utils/utils-response')
 
 const keyPrivate = fs.readFileSync('./private.key', 'utf-8')
 const keyPublic = fs.readFileSync('./public.key', 'utf-8')
 
 const jwtOptions = {
-  expiresIn: '1d'
+  expiresIn: config.schema.get('jwt.expired')
 }
 
 

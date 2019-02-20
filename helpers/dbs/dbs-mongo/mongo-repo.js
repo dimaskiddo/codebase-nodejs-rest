@@ -1,14 +1,7 @@
 const validate = require('validate.js')
-const database = require('./mongo-db')
+const database = require('./mongo-db').getConnection()
 const common = require('../../utils/utils-common')
 const log = require('../../utils/utils-logger')
-
-
-// -------------------------------------------------
-// DB Create Connection Function
-if (database.conn === undefined) {
-  database.getConnection()
-}
 
 
 // -------------------------------------------------
@@ -19,7 +12,7 @@ async function find(coll, params, sort, limit, page) {
         paramsSort[sort] = 1
     let paramsPage = limit * (page - 1)
 
-    let recordSet = await database.conn.collection(coll).find(params).sort(paramsSort).limit(limit).skip(paramsPage).toArray()
+    let recordSet = await database.collection(coll).find(params).sort(paramsSort).limit(limit).skip(paramsPage).toArray()
 
     if (validate.isEmpty(recordSet)) {
       log.send('mongo-repo-find').warn("Empty RecordSet Data")
@@ -37,7 +30,7 @@ async function find(coll, params, sort, limit, page) {
 // DB FindOne Function
 async function findOne(coll, params) {
   try {
-    let recordSet = await database.conn.collection(coll).findOne(params)
+    let recordSet = await database.collection(coll).findOne(params)
 
     if (validate.isEmpty(recordSet)) {
       log.send('mongo-repo-find-one').warn("Empty RecordSet Data")
@@ -55,7 +48,7 @@ async function findOne(coll, params) {
 // DB FindAll Function
 async function findAll(coll, params) {
   try {
-    let recordSet = await database.conn.collection(coll).find(params).toArray()
+    let recordSet = await database.collection(coll).find(params).toArray()
 
     if (validate.isEmpty(recordSet)) {
       log.send('mongo-repo-find-all').warn("Empty RecordSet Data")
@@ -73,7 +66,7 @@ async function findAll(coll, params) {
 // DB InsertOne Function
 async function insertOne(coll, data) {
   try {
-    let recordSet = await database.conn.collection(coll).insertOne(data)
+    let recordSet = await database.collection(coll).insertOne(data)
 
     if (recordSet.result.n != 1) {
       log.send('mongo-repo-insert-one').error("Failed to Insert Data")
@@ -91,7 +84,7 @@ async function insertOne(coll, data) {
 // DB InsertAll Function
 async function insertAll(coll, data) {
   try {
-    let recordSet = await database.conn.collection(coll).insertMany(data)
+    let recordSet = await database.collection(coll).insertMany(data)
 
     if (recordSet.result.n < 1) {
       log.send('mongo-repo-insert-all').error("Failed to Insert Data")
@@ -108,7 +101,7 @@ async function insertAll(coll, data) {
 // DB UpdateOne Function
 async function updateOne(coll, params, query) {
   try {
-    let recordSet = await database.conn.collection(coll).update(params, query, { upsert: true})
+    let recordSet = await database.collection(coll).update(params, query, { upsert: true})
 
     if (recordSet.result.nModified < 0) {
       log.send('mongo-repo-update-one').error("Failed to Update Data")
@@ -126,7 +119,7 @@ async function updateOne(coll, params, query) {
 // DB CountData Function
 async function countData(coll, params) {
   try {
-    let recordSet = await database.conn.collection(coll).count(params)
+    let recordSet = await database.collection(coll).count(params)
 
     if (validate.isEmpty(recordSet)) {
       log.send('mongo-repo-count-data').warn("Empty RecordSet Data")
