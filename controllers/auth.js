@@ -1,19 +1,20 @@
+const auth = require('../helpers/auth/auth-jwt')
+
 const response = require('../helpers/utils/utils-response')
-const authJWT = require('../helpers/auth/auth-jwt')
 
 
 // -------------------------------------------------
 // Index Auth Function
 function index(req, res) {
-  let auth = JSON.parse(req.body)
+  let data = JSON.parse(req.body)
 
-  if (auth.username.length === 0 || auth.password.legth === 0) {
+  if (data.username.length === 0 || data.password.legth === 0) {
     response.resBadRequest(res, 'Invalid Authorizaton')
     return
   }
 
-  if (auth.username === 'user' && auth.password == 'password') {
-    response.resSuccessData(res, {token: authJWT.getJWT({username: auth.username})})
+  if (data.username === 'user' && data.password == 'password') {
+    response.resSuccessData(res, {token: auth.getJWT({username: auth.username})})
   }
 }
 

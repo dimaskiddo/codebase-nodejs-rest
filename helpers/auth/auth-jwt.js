@@ -1,7 +1,9 @@
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const config = require('../../config')
+
 const response = require('../utils/utils-response')
+const log = require('../utils/utils-logger')
 
 const keyPrivate = fs.readFileSync('./private.key', 'utf-8')
 const keyPublic = fs.readFileSync('./public.key', 'utf-8')
@@ -17,6 +19,7 @@ function authJWT(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Bearer "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
+    log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
     response.resUnauthorized(res)
     return
   }

@@ -72,6 +72,12 @@ var schema = convict({
     }
   },
   store: {
+    driver: {
+      doc: 'Storage Driver',
+      format: String,
+      default: '',
+      env: 'STORE_DRIVER'
+    },
     endPoint: {
       doc: 'Storage Endpoint',
       format: String,
@@ -105,7 +111,7 @@ var schema = convict({
     port: {
       doc: 'Storage Port',
       format: 'port',
-      default: '',
+      default: 443,
       env: 'STORE_PORT'
     },
     useSSL: {

@@ -1,5 +1,6 @@
 const validate = require('validate.js')
 const database = require('./mongo-db').getConnection()
+
 const common = require('../../utils/utils-common')
 const log = require('../../utils/utils-logger')
 

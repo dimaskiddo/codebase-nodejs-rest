@@ -1,4 +1,5 @@
 const response = require('../utils/utils-response')
+const log = require('../utils/utils-logger')
 
 
 // -------------------------------------------------
@@ -7,6 +8,7 @@ function authBasic(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Basic "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+    log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
     response.resAuthenticate(res)
     return
   }
@@ -21,6 +23,7 @@ function authBasic(req, res, next) {
   // Check Credentials Section
   // It Should Have 2 Section, Username and Password
   if (authCredentials.length !== 2) {
+    log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
     response.resUnauthorized(res)
     return
   }
@@ -35,4 +38,6 @@ function authBasic(req, res, next) {
 
 // -------------------------------------------------
 // Export Module
-module.exports = authBasic
+module.exports = {
+  authBasic
+}
