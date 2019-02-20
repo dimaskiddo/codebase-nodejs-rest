@@ -10,7 +10,7 @@ var conn
 
 
 // -------------------------------------------------
-// DB Get Connect Function
+// DB Get Connection Function
 async function getConnection() {
   if (conn === undefined) {
     let dbURI

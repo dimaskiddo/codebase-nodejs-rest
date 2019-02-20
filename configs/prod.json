@@ -14,5 +14,11 @@
     "username": "user",
     "password": "password",
     "name": "db"
+  },
+  "store": {
+    "driver": "",
+    "accessKey": "",
+    "secretKey": "",
+    "bucket": ""  
   }
 }

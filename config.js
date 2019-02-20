@@ -70,6 +70,50 @@ var schema = convict({
       default: '',
       env: 'DB_NAME'
     }
+  },
+  store: {
+    endPoint: {
+      doc: 'Storage Endpoint',
+      format: String,
+      default: '',
+      env: 'STORE_ENDPOINT'
+    },
+    accessKey: {
+      doc: 'Storage Access Key',
+      format: String,
+      default: '',
+      env: 'STORE_ACCESS_KEY'
+    },
+    secretKey: {
+      doc: 'Storage Secret Key',
+      format: String,
+      default: '',
+      env: 'STORE_SECRET_KEY'
+    },
+    region: {
+      doc: 'Storage Region',
+      format: String,
+      default: 'us-east-1',
+      env: 'STORE_REGION'
+    },
+    bucket: {
+      doc: 'Storage Bucket',
+      format: String,
+      default: '',
+      env: 'STORE_BUCKET'
+    },
+    port: {
+      doc: 'Storage Port',
+      format: 'port',
+      default: '',
+      env: 'STORE_PORT'
+    },
+    useSSL: {
+      doc: 'Storage Use SSL',
+      format: Boolean,
+      default: false,
+      env: 'STORE_USE_SSL'
+    }
   }
 })
 schema.loadFile('./configs/' + schema.get('env')  + '.json')
