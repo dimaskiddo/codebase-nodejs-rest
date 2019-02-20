@@ -3,8 +3,8 @@ const convict = require('convict')
 
 
 // -------------------------------------------------
-// Configuration Schema Variable
-var schema = convict({
+// Configuration Schema Constant
+const schema = convict({
   env: {
     doc: 'The Application Environment',
     format: ['dev', 'prod', 'test'],
