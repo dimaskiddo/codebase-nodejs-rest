@@ -1,6 +1,9 @@
 {
   "env": "dev",
-  "port": 3000,
+  "server": {
+    "address": "127.0.0.1",
+    "port": 3000
+  },
   "log": {
     "level" : "debug"
   },

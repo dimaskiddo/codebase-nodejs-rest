@@ -11,11 +11,19 @@ const schema = convict({
     default: 'dev',
     env: 'NODE_ENV'
   },
-  port: {
-    doc: 'The Application Port to Listen',
-    format: 'port',
-    default: 3000,
-    env: 'NODE_PORT'
+  server: {
+    address: {
+      doc: 'The Application Address to Listen',
+      format: 'ipaddress',
+      default: '0.0.0.0',
+      env: 'NODE_SERVER_ADDRESS'
+    },
+    port: {
+      doc: 'The Application Port to Listen',
+      format: 'port',
+      default: 3000,
+      env: 'NODE_SERVER_PORT'
+    }
   },
   log: {
     level: {

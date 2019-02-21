@@ -17,7 +17,7 @@ const numCPUs = require('os').cpus().length
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(config.schema.get('port'))
+const port = normalizePort(config.schema.get('server.port'))
 app.set('port', port)
 
 /**
@@ -35,7 +35,7 @@ if (cluster.isMaster) {
     cluster.fork()
   }
 } else {
-  server.listen(port)
+  server.listen(port, config.schema.get('server.address'))
   server.on('error', onError)
   server.on('listening', onListening)
 }
