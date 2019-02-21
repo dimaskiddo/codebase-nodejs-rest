@@ -80,6 +80,26 @@ app.use(function (err, req, res) {
 })
 
 
+
+// -------------------------------------------------
+// Handle Proccess Exit
+process.on('SIGINT', function () {
+  console.log('')
+  
+  // Handle Database Connection
+  switch (config.schema.get('db.driver')) {
+    case 'mongo':
+      dbMongo.closeConnection()
+      break
+    case 'mysql':
+      break
+  }
+
+  // Gracefully Exit
+  process.exit(0)
+})
+
+
 // -------------------------------------------------
 // Export Module
 module.exports = app

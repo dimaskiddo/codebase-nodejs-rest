@@ -12,7 +12,7 @@ var conn
 
 // -------------------------------------------------
 // Store Get Connection Function
-async function getConnection() {
+function getConnection() {
   if (conn === undefined) {
     switch (config.schema.get('store.driver')) {
       case 'aws':
@@ -79,7 +79,7 @@ async function addFileUpload(fileName, fileBuffer) {
 
 // -------------------------------------------------
 // Store Get File URL Function
-async function getFileURL(fileName) {
+function getFileURL(fileName) {
   if (conn !== undefined) {
     switch (config.schema.get('store.driver')) {
       case 'aws':
