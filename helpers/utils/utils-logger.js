@@ -8,7 +8,7 @@ const package = require('../../package.json')
 // -------------------------------------------------
 // Log Schema Constant
 const schema = printf(({ level, message, label, timestamp, service }) => {
-  return `{"timestamp": "${timestamp}", "level": "${level}", "service": "${service}", "label": "${label}", message": "${message}"}`
+  return `{"timestamp":"${timestamp}","level":"${level}","service":"${service}","label":"${label}",message":"${message}"}`
 })
 
 

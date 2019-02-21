@@ -9,7 +9,8 @@ const keyPrivate = fs.readFileSync('./private.key', 'utf-8')
 const keyPublic = fs.readFileSync('./public.key', 'utf-8')
 
 const jwtOptions = {
-  expiresIn: config.schema.get('jwt.expired')
+  expiresIn: config.schema.get('jwt.expired'),
+  algorithm: 'RS256'  
 }
 
 
@@ -31,7 +32,7 @@ function authJWT(req, res, next) {
   let authClaims = jwt.verify(authPayload, keyPublic, jwtOptions)
 
   // Set Extracted Authorization Claims to HTTP Header
-  req.Set('X-JWT-Data', authClaims)
+  res.set('X-JWT-Data', Buffer.from(JSON.stringify(authClaims)).toString('base64'))
 
   // Call Next Handler Function With Current Request
   next()

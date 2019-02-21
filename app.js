@@ -74,7 +74,7 @@ app.use(function (req, res) {
   response.resNotFound(res, 'Not Found Method ' + req.method + ' at URI ' + req.url)
 })
 
-app.use(function (err, req, res) {
+app.use(function (err, req, res, next) {
   log.send('http-access').error(common.strToTitleCase(err.message))
   response.resInternalError(res, common.strToTitleCase(err.message))
 })

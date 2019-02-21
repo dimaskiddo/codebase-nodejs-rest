@@ -1,4 +1,4 @@
-const auth = require('../helpers/auth/auth-jwt')
+const authJWT = require('../helpers/auth/auth-jwt')
 
 const response = require('../helpers/utils/utils-response')
 
@@ -13,9 +13,7 @@ function index(req, res) {
     return
   }
 
-  if (data.username === 'user' && data.password == 'password') {
-    response.resSuccessData(res, {token: auth.getJWT({username: auth.username})})
-  }
+  response.resSuccessData(res, {token: authJWT.getJWT({username: data.username})})
 }
 
 
