@@ -40,7 +40,7 @@ async function getConnection() {
           process.exit(1)
         }
 
-        conn = client.db(config.schema.get('db.name'))
+        conn = session.db(config.schema.get('db.name'))
 
         if (! await getPing()) {
           log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Ping')
@@ -92,11 +92,12 @@ function closeConnection(){
       session.close()
     }
 
-    log.send('mongo-db-close-connection').error("Successfully Close Mongo Database Session")
+    log.send('mongo-db-close-connection').error('Successfully Close Mongo Database Session')
   } catch(err) {
     log.send('mongo-db-close-connection').error(common.strToTitleCase(err.message))
   }
 }
+
 
 // -------------------------------------------------
 // Export Module
