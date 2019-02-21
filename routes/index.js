@@ -1,7 +1,7 @@
 const express = require('express')
 
-const authBasic = require('../helpers/auth/auth-basic')
-const authJWT = require('../helpers/auth/auth-jwt')
+const basic = require('../helpers/auth/auth-basic')
+const jwt = require('../helpers/auth/auth-jwt')
 
 const ctlIndex = require('../controllers/index')
 const ctlAuth = require('../controllers/auth')
@@ -14,8 +14,8 @@ const router = express.Router()
 // Route List
 router.get('/', ctlIndex.index)
 router.get('/health', ctlIndex.health)
-router.get('/auth', authBasic.authBasic, ctlAuth.index)
-router.get('/users', authJWT.authJWT, ctlUsers.index)
+router.get('/auth', basic.auth, ctlAuth.index)
+router.get('/users', jwt.auth, ctlUsers.index)
 
 
 // -------------------------------------------------

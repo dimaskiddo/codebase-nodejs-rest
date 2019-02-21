@@ -1,14 +1,16 @@
+const jwt = require('../helpers/auth/auth-jwt')
+
 const response = require('../helpers/utils/utils-response')
 
 
 // -------------------------------------------------
 // Index User Function
 function index(req, res) {
-  // Decode JWT Data from Header
-  let jwtData = JSON.parse(Buffer.from(res.get('X-JWT-Data'), 'base64'))
+  // Parse JWT Claims from Header
+  let dataClaims = jwt.getClaims(res.get('X-JWT-Claims'))
   
   // Response with JWT Data
-  response.resSuccessData(res, jwtData.data)
+  response.resSuccessData(res, dataClaims.data)
 }
 
 

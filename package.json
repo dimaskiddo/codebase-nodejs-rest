@@ -11,6 +11,10 @@
     "type": "git",
     "url": "https://github.com/dimaskiddo/frame-nodejs.git"
   },
+  "keys": {
+    "type": "rsa",
+    "url": "http://travistidwell.com/jsencrypt/demo/"
+  },
   "dependencies": {
     "convict": "^4.4.1",
     "dotenv": "^6.2.0",

@@ -4,7 +4,7 @@ const log = require('../utils/utils-logger')
 
 // -------------------------------------------------
 // Auth Basic Middleware Function
-function authBasic(req, res, next) {
+function auth(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Basic "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
@@ -39,5 +39,5 @@ function authBasic(req, res, next) {
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  authBasic
+  auth
 }

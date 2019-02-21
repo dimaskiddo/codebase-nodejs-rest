@@ -1,12 +1,9 @@
-const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const config = require('../../config')
 
+const crypt = require('../utils/utils-crypt')
 const response = require('../utils/utils-response')
 const log = require('../utils/utils-logger')
-
-const keyPrivate = fs.readFileSync('./private.key', 'utf-8')
-const keyPublic = fs.readFileSync('./public.key', 'utf-8')
 
 const jwtOptions = {
   expiresIn: config.schema.get('jwt.expired'),
@@ -16,7 +13,7 @@ const jwtOptions = {
 
 // -------------------------------------------------
 // Auth JWT Middleware Function
-function authJWT(req, res, next) {
+function auth(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Bearer "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
@@ -29,10 +26,12 @@ function authJWT(req, res, next) {
   let authPayload = req.headers.authorization.split(' ')[1]
 
   // Get Authorization Claims From JWT Token
-  let authClaims = jwt.verify(authPayload, keyPublic, jwtOptions)
+  // And Stringify Data to JSON Format
+  let authClaims = JSON.stringify(jwt.verify(authPayload, crypt.keyPublic, jwtOptions))
 
   // Set Extracted Authorization Claims to HTTP Header
-  res.set('X-JWT-Data', Buffer.from(JSON.stringify(authClaims)).toString('base64'))
+  // With RSA Encryption
+  res.set('X-JWT-Claims', crypt.encryptWithRSA(authClaims))
 
   // Call Next Handler Function With Current Request
   next()
@@ -41,14 +40,22 @@ function authJWT(req, res, next) {
 
 // -------------------------------------------------
 // Get JWT Token Function
-function getJWT(authPayload) {
-  return jwt.sign({data: authPayload}, keyPrivate, jwtOptions)
+function getToken(payload) {
+  return jwt.sign({data: payload}, crypt.keyPrivate, jwtOptions)
+}
+
+
+// -------------------------------------------------
+// Get JWT Claims Function
+function getClaims(data) {
+  return JSON.parse(crypt.decryptWithRSA(data))
 }
 
 
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  authJWT,
-  getJWT
+  auth,
+  getToken,
+  getClaims
 }
