@@ -34,8 +34,14 @@ async function getConnection() {
     try {
       if (dbURI !== undefined) {
         let client = await mongo.connect(dbURI, dbOptions)
-        
+
+        if (! client.isConnected()) {
+          log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Connection')
+          process.exit(1)
+        }
+
         conn = client.db(config.schema.get('db.name'))
+
         if (! await getPing()) {
           log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Ping')
           process.exit(1)
