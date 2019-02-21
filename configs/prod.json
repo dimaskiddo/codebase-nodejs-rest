@@ -3,7 +3,9 @@
   "server": {
     "address": "0.0.0.0",
     "port": 3000,
-    "uploadPath": "./public/uploads"
+    "upload": {
+      "path": "./public/uploads"
+    }
   },
   "log": {
     "level" : "info"

@@ -31,21 +31,27 @@ function normalizePort(val) {
 }
 
 /**
- * Get address and port from environment and store in Express.
+ * Get address and port from configuration.
  */
 
 const address = config.schema.get('server.address')
 const port = normalizePort(config.schema.get('server.port'))
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Listen on provided address and port.
  */
 
 if (cluster.isMaster) {
   log.send('http-server').info('Server Master Started at PID ' + process.pid)
+  
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork()
   }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log('Server Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Server Worker')
+    cluster.fork()
+  });  
 } else {
   log.send('http-server').info('Server Worker Started at PID ' + process.pid + ' Listening on ' + address + ':' + port)
   app.listen(port, address)
