@@ -80,12 +80,11 @@ app.use(function (err, req, res) {
 })
 
 
-
 // -------------------------------------------------
-// Handle Proccess Exit
-process.on('SIGINT', function () {
+// Process On Terminate Function
+function onTerminate() {
   console.log('')
-  
+    
   // Handle Database Connection
   switch (config.schema.get('db.driver')) {
     case 'mongo':
@@ -97,7 +96,10 @@ process.on('SIGINT', function () {
 
   // Gracefully Exit
   process.exit(0)
-})
+}
+
+process.on('SIGINT', onTerminate)
+process.on('SIGTERM', onTerminate)
 
 
 // -------------------------------------------------
