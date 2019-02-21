@@ -23,6 +23,12 @@ const schema = convict({
       format: 'port',
       default: 3000,
       env: 'NODE_SERVER_PORT'
+    },
+    uploadPath: {
+      doc: 'The Application Upload Path',
+      format: String,
+      default: './public/uploads',
+      env: 'NODE_SERVER_UPLOAD_PATH'
     }
   },
   log: {

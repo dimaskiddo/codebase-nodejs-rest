@@ -1,11 +1,12 @@
 const multer = require('multer')
+const config = require('../../config')
 
 
 // -------------------------------------------------
 // Store Local Storage Schema Constant
 const localStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './public/uploads/')
+    cb(null, config.schema.get('server.uploadPath'))
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '_' + file.originalname)
