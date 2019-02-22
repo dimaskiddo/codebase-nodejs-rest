@@ -4,13 +4,50 @@
  * Module dependencies.
  */
 
+const http = require('http')
 const cluster = require('cluster')
 const numCPUs = require('os').cpus().length
 
 const app = require('../app')
 const config = require('../config')
 
+const common = require('../helpers/utils/utils-common')
 const log = require('../helpers/utils/utils-logger')
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(config.schema.get('server.port'))
+app.set('port', port)
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app)
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+if (cluster.isMaster) {
+  log.send('http-server').info('Server Master Started at PID ' + process.pid)
+
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork()
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    log.send('http-server').warn('Server Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Server Worker')
+    cluster.fork()
+  })
+} else {
+  server.listen(port, config.schema.get('server.address'))
+
+  server.on('listening', onListening)
+  server.on('error', onError)
+}
 
 /**
  * Normalize a port into a number, string, or false.
@@ -31,28 +68,36 @@ function normalizePort(val) {
 }
 
 /**
- * Get address and port from configuration.
+ * Event listener for HTTP server "error" event.
  */
 
-const address = config.schema.get('server.address')
-const port = normalizePort(config.schema.get('server.port'))
+function onError(error) {
+  let addr = server.address()
 
-/**
- * Listen on provided address and port.
- */
-
-if (cluster.isMaster) {
-  log.send('http-server').info('Server Master Started at PID ' + process.pid)
-  
-  for (let i = 0; i < numCPUs; i++) {
-    cluster.fork()
+  if (error.syscall !== 'listen') {
+    log.send('http-server').error(common.strToTitleCase(error.message))
   }
 
-  cluster.on('exit', (worker, code, signal) => {
-    console.log('Server Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Server Worker')
-    cluster.fork()
-  });  
-} else {
-  log.send('http-server').info('Server Worker Started at PID ' + process.pid + ' Listening on ' + address + ':' + port)
-  app.listen(port, address)
+  // Handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      log.send('http-server').error('Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' Require Elevated Privileges')
+      break
+    case 'EADDRINUSE':
+      log.send('http-server').error('Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' is Already in Use')
+      break
+    default:
+      log.send('http-server').error(common.strToTitleCase(error.message))
+  }
+
+  process.exit(1)
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  let addr = server.address()
+  log.send('http-server').info('Server Worker Started at PID ' + process.pid + ' Listening on ' + addr.address + ':' + addr.port)
 }

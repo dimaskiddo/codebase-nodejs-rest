@@ -84,14 +84,14 @@ function getFileURL(fileName) {
     switch (config.schema.get('store.driver')) {
       case 'aws':
         return 'https://s3-' + config.schema.get('store.region') + '.amazonaws.com/' + 
-               config.schema.get('store.bucket') + '/' + fileName.replace(/ /g, '+')
+                config.schema.get('store.bucket') + '/' + fileName.replace(/ /g, '+')
       case 'minio':
         if (!config.schema.get('store.useSSL')) {
           return 'http://' + config.schema.get('store.endPoint') + '/' +
-                 config.schema.get('store.bucket') + '/' + fileName
+                  config.schema.get('store.bucket') + '/' + fileName
         }
         return 'https://' + config.schema.get('store.endPoint') + '/' +
-               config.schema.get('store.bucket') + '/' + fileName
+                config.schema.get('store.bucket') + '/' + fileName
     }
   } else {
     log.send('store-s3-get-file-url').error('Cannot Get Store Connection')
