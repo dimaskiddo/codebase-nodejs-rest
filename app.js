@@ -98,8 +98,8 @@ function onTerminate() {
   process.exit(0)
 }
 
-process.on('SIGINT', onTerminate)
 process.on('SIGTERM', onTerminate)
+process.on('SIGINT', onTerminate)
 
 
 // -------------------------------------------------
