@@ -64,7 +64,7 @@ function resCreated(res, data) {
 // Updated Response Function
 function resUpdated(res, data) {
   // Write Response
-  writeResponseData(res, 204, 'Updated', data)
+  writeResponseData(res, 200, 'Updated', data)
 }
 
 
