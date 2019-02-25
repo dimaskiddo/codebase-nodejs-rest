@@ -15,7 +15,7 @@ function auth(req, res, next) {
 
   // The Second Authorization Section Should Be The Credentials Payload
   // But We Should Decode it First From Base64 Encoding
-  let authPayload = Buffer.from(req.headers.authorization.split(' ')[1], 'base64').toString('ascii')
+  let authPayload = Buffer.from(req.headers.authorization.split(' ')[1], 'base64').toString('utf8')
 
   // Split Decoded Authorization Payload Into Username and Password Credentials
   let authCredentials = authPayload.split(':')
@@ -24,7 +24,7 @@ function auth(req, res, next) {
   // It Should Have 2 Section, Username and Password
   if (authCredentials.length !== 2) {
     log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
-    response.resUnauthorized(res)
+    response.resBadRequest(res)
     return
   }
 
