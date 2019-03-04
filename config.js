@@ -41,6 +41,12 @@ const schema = convict({
       env: 'NODE_LOG_LEVEL'
     }
   },
+  timezone: {
+    doc: 'The Application Timezone',
+    format: String,
+    default: 'UTC',
+    env: 'NODE_TIMEZONE'
+  },
   jwt: {
     expired: {
       doc: 'JWT Authentication Expiration',

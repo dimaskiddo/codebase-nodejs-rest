@@ -10,6 +10,7 @@
   "log": {
     "level" : "info"
   },
+  "timezone": "Asia/Jakarta",
   "jwt": {
     "expired": "1d"
   },
