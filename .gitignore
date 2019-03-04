@@ -59,3 +59,9 @@ typings/
 
 # next.js build output
 .next
+
+# Public directory
+public/uploads/*
+
+# Not .gitkeep file
+!*.gitkeep
