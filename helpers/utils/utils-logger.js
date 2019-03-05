@@ -9,8 +9,8 @@ const package = require('../../package.json')
 // -------------------------------------------------
 // Log Schema Timestamp Constant
 const schemaTimestamp = format((info, opts) => {
-  if(opts.tz)
-    info.timestamp = moment().tz(opts.tz).format()
+  if (opts.tz)
+    info.timestamp = moment().tz(opts.tz).format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ')
   return info
 })
 
