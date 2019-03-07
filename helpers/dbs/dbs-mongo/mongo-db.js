@@ -34,9 +34,9 @@ async function getConnection() {
     try {
       if (dbURI !== undefined) {
         session = await mongo.connect(dbURI, dbOptions)
-
+        
         if (! session.isConnected()) {
-          log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Connection')
+          log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Session')
           process.exit(1)
         }
 
@@ -75,7 +75,6 @@ async function getPing() {
       }
     }
 
-    log.send('mongo-db-get-ping').error('Cannot Get Mongo Database Connection')
     return false
   } catch(err) {
     log.send('mongo-db-get-ping').error(common.strToTitleCase(err.message))

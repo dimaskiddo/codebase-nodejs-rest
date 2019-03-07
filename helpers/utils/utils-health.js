@@ -3,6 +3,7 @@ const response = require('./utils-response')
 const log = require('./utils-logger')
 
 const dbMongo = require('../dbs/dbs-mongo/mongo-db')
+const dbMySQL = require('../dbs/dbs-mysql/mysql-db')
 
 
 // -------------------------------------------------
@@ -17,6 +18,11 @@ async function healthCheck(res) {
       }
       break
     case 'mysql':
+      if (! await dbMySQL.getPing()) {
+        log.send('service-health').error('Cannot Get MySQL Database Ping')
+        response.resInternalError(res, 'Cannot Get MySQL Database Ping')
+        return
+      }
       break
   }
 

@@ -19,11 +19,10 @@ const app = express()
 // Database Module
 switch (config.schema.get('db.driver')) {
   case 'mongo':
-    if (dbMongo.conn === undefined) {
-      dbMongo.getConnection()
-    }
+    dbMongo.getConnection()
     break
   case 'mysql':
+    dbMySQL.getConnection()
     break
 }
 
@@ -32,9 +31,7 @@ switch (config.schema.get('db.driver')) {
 // Store Module
 switch (config.schema.get('store.driver')) {
   case 'aws', 'minio':
-    if (storeS3.conn === undefined) {
-      storeS3.getConnection()
-    }
+    storeS3.getConnection()
     break
 }
 
@@ -92,6 +89,7 @@ function onTerminate() {
       dbMongo.closeConnection()
       break
     case 'mysql':
+      dbMySQL.closeConnection()
       break
   }
 
