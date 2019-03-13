@@ -3,7 +3,7 @@ MAINTAINER Dimas Restu Hidayanto <dimas.restu@student.upi.edu>
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY . .
 RUN npm i -g npm \
     && npm i --production
 

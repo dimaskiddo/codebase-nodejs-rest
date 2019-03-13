@@ -4,7 +4,8 @@
     "address": "127.0.0.1",
     "port": 3000,
     "upload": {
-      "path": "./public/uploads"
+      "path": "./public/uploads",
+      "limit": 8
     }
   },
   "log": {

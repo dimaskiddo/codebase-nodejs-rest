@@ -30,6 +30,12 @@ const schema = convict({
         format: String,
         default: './public/uploads',
         env: 'NODE_SERVER_UPLOAD_PATH'
+      },
+      limit: {
+        doc: 'The Application Upload Limit Size',
+        format: Number,
+        default: 8,
+        env: 'NODE_SERVER_UPLOAD_LIMIT'
       }
     }
   },
