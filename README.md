@@ -15,7 +15,7 @@ Prequisites package:
 * NPM (NodeJS Dependency Package Management Tool) Version 5.xx or higher
 
 Optional package:
-* Docker (Optional, For Application Containerization)
+* Docker (Application Containerization)
 
 ### Installing
 
@@ -51,7 +51,7 @@ To build this codebase to binaries for distribution purposes you can use any ext
 
 * [NodeJS](https://nodejs.org/) - NodeJS Programming Languange
 * [NPM](https://www.npmjs.com/) - NodeJS Dependency Package Management Tool
-* [Docker](https://www.docker.com) - Application Containerization
+* [Docker](https://www.docker.com/) - Application Containerization
 
 ## Authors
 
