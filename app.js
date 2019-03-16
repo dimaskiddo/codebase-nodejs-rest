@@ -41,21 +41,23 @@ switch (config.schema.get('store.driver')) {
 app.use(helmet())
 
 app.use(express.json())
+
 app.use(express.urlencoded({ 
-  extended: false
+  extended: false,
+  limit: config.schema.get('server.upload.limit') + 'mb'
 }))
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-  
-  express.bodyParser({limit: config.schema.get('server.upload.limit') +'mb'})
+  next()
+})
 
+app.use(function (req, res, next) {
   if (req.url !== '/favicon.ico') {
     log.send('http-access').info('Access Method ' + req.method + ' at URI ' + req.url)
   }
-
   next()
 })
 

@@ -31,7 +31,7 @@ rm -rf .git
 ```
 * Run following command to pull dependecies package
 ```
-npm install --production
+npm install
 ```
 - Until this step you already can run this code by using this command
 ```
