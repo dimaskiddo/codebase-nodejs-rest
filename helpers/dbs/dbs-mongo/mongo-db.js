@@ -16,13 +16,13 @@ async function getConnection() {
   if (conn === undefined) {
     let dbURI
 
-    if (config.schema.get('db.username') !== '' || config.schema.get('db.password') !== '') {
+    if (config.schema.get('db.username') === '' || config.schema.get('db.password') === '') {
       dbURI = 'mongodb://' + config.schema.get('db.host') + ':' + config.schema.get('db.port')
     } else {
       dbURI = 'mongodb://' + config.schema.get('db.username') + ':' + config.schema.get('db.password') + '@' +
-              config.schema.get('db.host') + ':' + config.schema.get('db.port')
+              config.schema.get('db.host') + ':' + config.schema.get('db.port') + '/' + config.schema.get('db.name')
     }
-
+    
     const dbOptions = {
       poolSize: 50,    
       keepAlive: 15000,
@@ -34,12 +34,6 @@ async function getConnection() {
     try {
       if (dbURI !== undefined) {
         session = await mongo.connect(dbURI, dbOptions)
-        
-        if (! session.isConnected()) {
-          log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Session')
-          process.exit(1)
-        }
-
         conn = session.db(config.schema.get('db.name'))
 
         if (! await getPing()) {
@@ -66,12 +60,14 @@ async function getConnection() {
 // DB Get Ping Function
 async function getPing() {
   try {
-    if (conn !== undefined) {
-      let dbAdmin = conn.admin()  
-      let dbStatus = await dbAdmin.ping()
-      
-      if (dbStatus.ok === 1) {
-        return true
+    if (session.isConnected()) {
+      if (conn !== undefined) {
+        let dbAdmin = conn.admin()  
+        let dbStatus = await dbAdmin.ping()
+        
+        if (dbStatus.ok === 1) {
+          return true
+        }
       }
     }
 

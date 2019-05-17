@@ -7,13 +7,13 @@ const log = require('../../utils/utils-logger')
 
 // -------------------------------------------------
 // DB Connection Variable
-var session, conn
+var session
 
 
 // -------------------------------------------------
 // DB Get Connection Function
 async function getConnection() {
-  if (conn === undefined) {
+  if (session === undefined) {
     try {
       session = await mysql.createPool({
         host: config.schema.get('db.host'),
@@ -24,25 +24,18 @@ async function getConnection() {
         timezone: config.schema.get('timezone')
       })
 
-      conn = await new Promise(function (resolve, reject) {
-        session.getConnection(function (err, connection) {
-          if (err) reject(err)
-          resolve(connection)
-        })
-      })
-
       if (! await getPing()) {
         log.send('mysql-db-get-connection').error('Cannot Get MySQL Database Ping')
         process.exit(1)
       }
-
-      return conn
+      
+      return session
     } catch(err) {
       log.send('mysql-db-get-connection').error(common.strToTitleCase(err.message))
       process.exit(1)
     }
   } else {
-    return conn
+    return session
   }
 }
 
@@ -52,12 +45,21 @@ async function getConnection() {
 async function getPing() {
   try {
     let dbStatus = false
-    
-    if (conn !== undefined) {
-      dbStatus = await new Promise(function (resolve, reject) {
-        conn.ping(function (err) {
-          if (err) reject(false)
-          resolve(true)
+
+    if (session !== undefined) {
+      dbStatus = await new Promise(function(resolve, reject) {
+        session.getConnection(function(err, conn) {
+          if (err) reject(err)
+
+          if (conn !== undefined) {
+            conn.ping(function(err) {
+              if (err) resolve(false)
+              resolve(true)          
+            })
+            conn.release()
+          } else {
+            resolve(false)
+          }
         })
       })
     }
@@ -75,7 +77,7 @@ async function getPing() {
 function closeConnection(){
   try {
     if (session !== undefined) {
-      session.end(function (err) {
+      session.end(function(err) {
         if (err) throw(err)
       })
     }
