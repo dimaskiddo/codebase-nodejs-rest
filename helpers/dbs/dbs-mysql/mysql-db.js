@@ -7,15 +7,15 @@ const log = require('../../utils/utils-logger')
 
 // -------------------------------------------------
 // DB Connection Variable
-var session
+var dbPool
 
 
 // -------------------------------------------------
 // DB Get Connection Function
 async function getConnection() {
-  if (session === undefined) {
+  if (dbPool === undefined) {
     try {
-      session = await mysql.createPool({
+      dbPool = await mysql.createPool({
         host: config.schema.get('db.host'),
         port: config.schema.get('db.port'),
         user: config.schema.get('db.username'),
@@ -29,13 +29,13 @@ async function getConnection() {
         process.exit(1)
       }
       
-      return session
+      return dbPool
     } catch(err) {
       log.send('mysql-db-get-connection').error(common.strToTitleCase(err.message))
       process.exit(1)
     }
   } else {
-    return session
+    return dbPool
   }
 }
 
@@ -46,19 +46,18 @@ async function getPing() {
   try {
     let dbStatus = false
 
-    if (session !== undefined) {
+    if (dbPool !== undefined) {
       dbStatus = await new Promise(function(resolve, reject) {
-        session.getConnection(function(err, conn) {
+        dbPool.getConnection(function(err, dbConn) {
           if (err) reject(err)
 
-          if (conn !== undefined) {
-            conn.ping(function(err) {
-              if (err) resolve(false)
-              resolve(true)          
+          if (dbConn !== undefined) {
+            dbConn.ping(function(err) {
+              if (err) reject(err)
+              resolve(true)
             })
-            conn.release()
-          } else {
-            resolve(false)
+              
+            dbConn.release()
           }
         })
       })
@@ -76,13 +75,13 @@ async function getPing() {
 // DB Close Connection Function
 function closeConnection(){
   try {
-    if (session !== undefined) {
-      session.end(function(err) {
+    if (dbPool !== undefined) {
+      dbPool.end(function(err) {
         if (err) throw(err)
       })
     }
 
-    log.send('mysql-db-close-connection').error('Successfully Close MySQL Database Session')
+    log.send('mysql-db-close-connection').error('Successfully Close MySQL Database Connection')
   } catch(err) {
     log.send('mysql-db-close-connection').error(common.strToTitleCase(err.message))
   }

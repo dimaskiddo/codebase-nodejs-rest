@@ -7,13 +7,13 @@ const log = require('../../utils/utils-logger')
 
 // -------------------------------------------------
 // DB Connection Variable
-var session, conn
+var dbPool, dbConn
 
 
 // -------------------------------------------------
 // DB Get Connection Function
 async function getConnection() {
-  if (conn === undefined) {
+  if (dbConn === undefined) {
     let dbURI
 
     if (config.schema.get('db.username') === '' || config.schema.get('db.password') === '') {
@@ -32,26 +32,27 @@ async function getConnection() {
     }
 
     try {
-      if (dbURI !== undefined) {
-        session = await mongo.connect(dbURI, dbOptions)
-        conn = session.db(config.schema.get('db.name'))
+      dbPool = await mongo.connect(dbURI, dbOptions)
 
-        if (! await getPing()) {
-          log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Ping')
-          process.exit(1)
-        }
-
-        return conn
-      } else {
-        log.send('mongo-db-get-connection').error('Cannot Get Mongo Database URI')
+      if (! dbPool.isConnected()){
+        log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Connection')
         process.exit(1)
       }
+
+      dbConn = dbPool.db(config.schema.get('db.name'))
+
+      if (! await getPing()) {
+        log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Ping')
+        process.exit(1)
+      }
+
+      return dbConn
     } catch(err) {
       log.send('mongo-db-get-connection').error(common.strToTitleCase(err.message))
       process.exit(1)
     }
   } else {
-    return conn
+    return dbConn
   }
 }
 
@@ -60,13 +61,15 @@ async function getConnection() {
 // DB Get Ping Function
 async function getPing() {
   try {
-    if (session.isConnected()) {
-      if (conn !== undefined) {
-        let dbAdmin = conn.admin()  
-        let dbStatus = await dbAdmin.ping()
-        
-        if (dbStatus.ok === 1) {
-          return true
+    if (dbPool !== undefined) {
+      if (dbPool.isConnected()) {
+        if (dbConn !== undefined) {
+          let dbAdmin = dbConn.admin()  
+          let dbStatus = await dbAdmin.ping()
+          
+          if (dbStatus.ok === 1) {
+            return true
+          }    
         }
       }
     }
@@ -83,11 +86,11 @@ async function getPing() {
 // DB Close Connection Function
 function closeConnection(){
   try {
-    if (session !== undefined) {
-      session.close()
+    if (dbPool !== undefined) {
+      dbPool.close()
     }
 
-    log.send('mongo-db-close-connection').error('Successfully Close Mongo Database Session')
+    log.send('mongo-db-close-connection').error('Successfully Close Mongo Database Connection')
   } catch(err) {
     log.send('mongo-db-close-connection').error(common.strToTitleCase(err.message))
   }
