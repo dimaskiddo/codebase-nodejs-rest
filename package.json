@@ -1,5 +1,5 @@
 {
-  "name": "frame-nodejs",
+  "name": "codebase-nodejs-rest",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
   "license": "ISC OR GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dimaskiddo/frame-nodejs.git"
+    "url": "https://github.com/dimaskiddo/codebase-nodejs-rest.git"
   },
   "keys": {
     "type": "rsa",
@@ -19,7 +19,7 @@
     "convict": "^4.4.1",
     "dotenv": "^6.2.0",
     "express": "~4.16.0",
-    "helmet": "^3.15.1",
+    "helmet": "^3.21.2",
     "jsonwebtoken": "^8.4.0",
     "minio": "^7.0.5",
     "moment-timezone": "^0.5.23",
