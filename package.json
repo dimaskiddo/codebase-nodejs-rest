@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./cmd/www"
+    "start": "node ./bin/www"
   },
   "author": "Dimas Restu Hidayanto",
   "license": "ISC OR GPL-3.0",

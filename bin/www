@@ -8,12 +8,11 @@ const http = require('http')
 const cluster = require('cluster')
 const numCPUs = require('os').cpus().length
 
-const config = require('../pkg/config')
-
 const common = require('../pkg/utils/common')
 const log = require('../pkg/utils/logger')
 
-const app = require('../internal/index')
+const config = require('../pkg/config')
+const app = require('../pkg/app')
 
 /**
  * Get port from environment and store in Express.

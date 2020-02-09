@@ -1,16 +1,16 @@
 const express = require('express')
 const helmet = require('helmet')
 
-const config = require('../pkg/config')
+const config = require('./config')
 
-const dbMongo = require('../pkg/databases/mongo/dbs')
-const dbMySQL = require('../pkg/databases/mysql/dbs')
+const dbMongo = require('./databases/mongo/dbs')
+const dbMySQL = require('./databases/mysql/dbs')
 
-const storeS3 = require('../pkg/stores/S3')
+const storeS3 = require('./stores/S3')
 
-const common = require('../pkg/utils/common')
-const response = require('../pkg/utils/response')
-const log = require('../pkg/utils/logger')
+const common = require('./utils/common')
+const response = require('./utils/response')
+const log = require('./utils/logger')
 
 const app = express()
 
@@ -64,7 +64,7 @@ app.use(function (req, res, next) {
 
 // -------------------------------------------------
 // Load Router Handler to Express Module
-app.use('/', require('./routes/index'))
+app.use('/', require('../internal/routes/index'))
 
 
 // -------------------------------------------------

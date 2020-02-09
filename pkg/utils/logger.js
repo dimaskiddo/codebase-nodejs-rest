@@ -1,6 +1,7 @@
-const moment = require('moment-timezone')
 const { createLogger, format, transports } = require('winston')
-const { combine, label, printf } = format
+const { combine, printf } = format
+
+const moment = require('moment-timezone')
 
 const package = require('../../package.json')
 const config = require('../config')
@@ -18,25 +19,31 @@ const schemaTimestamp = format((info, opts) => {
 // -------------------------------------------------
 // Log Schema Format Constant
 const schemaFormat = printf(({ level, message, label, timestamp, service }) => {
-  return `{"label":"${label}","level":"${level}","msg":"${message}","service":"${service}","time":"${timestamp}"`
+  return `${level}:
+  > service   : ${service}
+  > label     : ${label}
+  > message   : ${message}
+  > timestamp : ${timestamp}`
 })
 
 
 // -------------------------------------------------
 // Log Send Constant
-const send = (labelTag) => createLogger({
+const send = (scope) => createLogger({
   format: combine(
-    label({ label: labelTag }),
     schemaTimestamp({ tz: config.schema.get('timezone') }),
-    schemaFormat
+    format.colorize(),
+    format.simple(),
+    schemaFormat,
   ),
-  defaultMeta: { service: package.name },
+  defaultMeta: {
+    service: package.name,
+    label: scope,
+  },
   transports: [
     new transports.Console({
       level: config.schema.get('log.level'),
-      handleExceptions: true,
-      json: true,
-      colorize: false
+      handleExceptions: true
     })
   ],
   exitOnError: false
