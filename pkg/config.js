@@ -85,12 +85,32 @@ const schema = convict({
       format: ['debug', 'verbose', 'info', 'warn', 'error'],
       default: 'info',
       env: 'NODE_LOG_LEVEL'
+    },
+    logstash: {
+      node: {
+        doc: 'The Application Log Logstash Node Name',
+        format: String,
+        default: '',
+        env: 'NODE_LOG_LOGSTASH_NODE'
+      },
+      host: {
+        doc: 'The Application Log Logstash Host',
+        format: String,
+        default: '127.0.0.1',
+        env: 'NODE_LOG_LOGSTASH_HOST'
+      },
+      port: {
+        doc: 'The Application Log Logstash Node Port',
+        format: 'port',
+        default: 5000,
+        env: 'NODE_LOG_LOGSTASH_PORT'
+      }
     }
   },
   timezone: {
     doc: 'The Application Timezone',
     format: String,
-    default: 'UTC',
+    default: 'Asia/Jakarta',
     env: 'NODE_TIMEZONE'
   },
   jwt: {

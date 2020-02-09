@@ -1,10 +1,25 @@
-const { createLogger, format, transports } = require('winston')
-const { combine, printf } = format
-
 const moment = require('moment-timezone')
+
+const { createLogger, format, transports, winston } = require('winston')
+const { combine } = format
+require('winston-logstash')
 
 const package = require('../../package.json')
 const config = require('../config')
+
+
+// -------------------------------------------------
+// Inject Winston Logstash Transport
+if (config.schema.get('log.logstash.node') !== '' &&
+    config.schema.get('log.logstash.host') !== '' &&
+    config.schema.get('log.logstash.port') !== '') {
+  
+  winston.add(winston.transports.Logstash, {
+    node_name: config.schema.get('log.logstash.node'),
+    host: config.schema.get('log.logstash.host'),
+    port: config.schema.get('log.logstash.port')
+  })
+}
 
 
 // -------------------------------------------------
@@ -17,33 +32,22 @@ const schemaTimestamp = format((info, opts) => {
 
 
 // -------------------------------------------------
-// Log Schema Format Constant
-const schemaFormat = printf(({ level, message, label, timestamp, service }) => {
-  return `${level}:
-  > service   : ${service}
-  > label     : ${label}
-  > message   : ${message}
-  > timestamp : ${timestamp}`
-})
-
-
-// -------------------------------------------------
 // Log Send Constant
-const send = (scope) => createLogger({
+const send = (label) => createLogger({
   format: combine(
     schemaTimestamp({ tz: config.schema.get('timezone') }),
-    format.colorize(),
-    format.simple(),
-    schemaFormat,
+    format.logstash(),
   ),
   defaultMeta: {
     service: package.name,
-    label: scope,
+    label: label,
   },
   transports: [
     new transports.Console({
       level: config.schema.get('log.level'),
-      handleExceptions: true
+      handleExceptions: true,
+      json: true,
+      colorize: false,
     })
   ],
   exitOnError: false
