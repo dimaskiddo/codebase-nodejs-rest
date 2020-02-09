@@ -88,7 +88,7 @@ const schema = convict({
     },
     logstash: {
       node: {
-        doc: 'The Application Log Logstash Node Name',
+        doc: 'The Application Log Logstash Node',
         format: String,
         default: '',
         env: 'NODE_LOG_LOGSTASH_NODE'
@@ -100,7 +100,7 @@ const schema = convict({
         env: 'NODE_LOG_LOGSTASH_HOST'
       },
       port: {
-        doc: 'The Application Log Logstash Node Port',
+        doc: 'The Application Log Logstash Port',
         format: 'port',
         default: 5000,
         env: 'NODE_LOG_LOGSTASH_PORT'
