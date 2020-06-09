@@ -6,14 +6,23 @@ const response = require('../utils/response')
 const log = require('../utils/logger')
 
 const jwtOptions = {
+  issuer: config.schema.get('jwt.issuer'),
+  audience: config.schema.get('jwt.audience'),
   expiresIn: config.schema.get('jwt.expired'),
+  algorithm: 'RS256'  
+}
+
+const jwtRefreshOptions = {
+  issuer: config.schema.get('jwt.issuer'),
+  audience: config.schema.get('jwt.audience'),
+  expiresIn: config.schema.get('jwt.refresh'),
   algorithm: 'RS256'  
 }
 
 
 // -------------------------------------------------
 // Auth JWT Middleware Function
-function auth(req, res, next) {
+function auth(req, res) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Bearer "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
@@ -27,12 +36,37 @@ function auth(req, res, next) {
 
   // Get Authorization Claims From JWT Token
   // And Stringify Data to JSON Format
-  let authClaims = JSON.stringify(jwt.verify(authPayload, crypt.keyPublic, jwtOptions))
+  return JSON.stringify(jwt.verify(authPayload, crypt.keyPublic, jwtOptions))
+}
+
+
+// -------------------------------------------------
+// Auth JWT Claims Middleware Function
+function authClaims(req, res, next) {
+  // Get Authorization Claims From JWT Token
+  // And Stringify Data to JSON Format
+  let authClaims = auth(req, res)
 
   // Set Extracted Authorization Claims to HTTP Header
   // With RSA Encryption
   res.set('X-JWT-Claims', crypt.encryptWithRSA(authClaims))
 
+  // Call Next Handler Function With Current Request
+  next()
+}
+
+
+// -------------------------------------------------
+// Auth JWT Refresh Middleware Function
+function authRefresh(req, res, next) {
+  // Get Authorization Claims From JWT Token
+  // And Stringify Data to JSON Format
+  let authRefresh = auth(req, res)
+
+  // Set Extracted Authorization Claims to HTTP Header
+  // With RSA Encryption
+  res.set('X-JWT-Refresh', crypt.encryptWithRSA(authRefresh))
+  
   // Call Next Handler Function With Current Request
   next()
 }
@@ -46,6 +80,13 @@ function getToken(payload) {
 
 
 // -------------------------------------------------
+// Get JWT Refresh Token Function
+function getRefreshToken(payload) {
+  return jwt.sign({data: payload}, crypt.keyPrivate, jwtRefreshOptions)
+}
+
+
+// -------------------------------------------------
 // Get JWT Claims Function
 function getClaims(data) {
   return JSON.parse(crypt.decryptWithRSA(data))
@@ -55,7 +96,9 @@ function getClaims(data) {
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  auth,
+  authClaims,
+  authRefresh,
   getToken,
+  getRefreshToken,
   getClaims
 }

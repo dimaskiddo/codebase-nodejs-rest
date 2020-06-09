@@ -3,7 +3,7 @@ const response = require('../../../../pkg/utils/response')
 
 
 // -------------------------------------------------
-// Index Auth Function
+// Auth Index Function
 function index(req, res) {
   let dataBody = JSON.parse(req.body)
 
@@ -12,12 +12,30 @@ function index(req, res) {
     return
   }
 
-  response.resSuccessData(res, {token: jwt.getToken({username: dataBody.username})})
+  response.resSuccessData(res, {
+    token: jwt.getToken({username: dataBody.username}),
+    refreshToken: jwt.getRefreshToken({username: dataBody.username})
+  })
+}
+
+
+// -------------------------------------------------
+// Auth Refresh Function
+function refresh(req, res) {
+  // Parse JWT Claims from Header
+  let dataClaims = jwt.getClaims(res.get('X-JWT-Refresh'))
+  
+  // Response with JWT Claims
+  response.resSuccessData(res, {
+    token: jwt.getToken({username: dataClaims.data.username}),
+    refreshToken: jwt.getRefreshToken({username: dataClaims.data.username})
+  })
 }
 
 
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  index
+  index,
+  refresh
 }

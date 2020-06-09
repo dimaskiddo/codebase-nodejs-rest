@@ -1,12 +1,13 @@
 {
   "env": "production",
-  "workers": 2,
+  "workers": 0,
   "server": {
     "address": "0.0.0.0",
     "port": 3000,
     "upload": {
       "path": "./misc/public/uploads",
-      "limit": 8
+      "limit": 8,
+      "max": 10
     },
     "keys": {
       "private": "./misc/keys/private.key",
@@ -18,7 +19,9 @@
   },
   "timezone": "Asia/Jakarta",
   "jwt": {
-    "expired": "1d"
+    "audience": "1f3730ca-776a-4420-ad17-cf0acb31d10c",
+    "expired": "1d",
+    "refresh": "90d"
   },
   "db": {
     "driver": "",
@@ -31,7 +34,6 @@
   "store": {
     "driver": "",
     "accessKey": "",
-    "secretKey": "",
-    "bucket": ""  
+    "secretKey": ""
   }
 }

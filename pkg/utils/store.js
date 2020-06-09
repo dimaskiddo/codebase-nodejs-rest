@@ -20,13 +20,7 @@ const storeToLocal = multer({ storage: localStorage })
 
 
 // -------------------------------------------------
-// Store to S3 Storage Constant
-const storeToS3 = multer({ storage: multer.memoryStorage() })
-
-
-// -------------------------------------------------
 // Export Module
 module.exports = {
-  storeToLocal,
-  storeToS3
+  storeToLocal
 }

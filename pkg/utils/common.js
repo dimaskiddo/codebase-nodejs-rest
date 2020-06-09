@@ -8,7 +8,15 @@ function strToTitleCase(str) {
 
 
 // -------------------------------------------------
+// String Space to Undercase Function
+function strSpaceToUnderscore(str) {
+  return str.replace (/ /g, '_')
+}
+
+
+// -------------------------------------------------
 // Export Module
 module.exports = {
-  strToTitleCase
+  strToTitleCase,
+  strSpaceToUnderscore
 }

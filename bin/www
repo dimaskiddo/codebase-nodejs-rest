@@ -34,6 +34,10 @@ const server = http.createServer(app)
 if (cluster.isMaster) {
   log.send('http-server').info('Server Master Started at PID ' + process.pid)
 
+  if (config.schema.get('workers') == 0) {
+    config.schema.set('workers', numCPUs)
+  }
+
   if (config.schema.get('workers') <= numCPUs) {
     for (let i = 0; i < config.schema.get('workers'); i++) {
       cluster.fork()

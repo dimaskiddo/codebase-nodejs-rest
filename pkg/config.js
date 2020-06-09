@@ -1,6 +1,8 @@
 const env = require('dotenv')
 const convict = require('convict')
 
+const package = require('../package.json')
+
 
 // -------------------------------------------------
 // Configuration Schema Constant
@@ -42,6 +44,12 @@ const schema = convict({
         format: Number,
         default: 8,
         env: 'NODE_SERVER_UPLOAD_LIMIT'
+      },
+      max: {
+        doc: 'The Application Upload Maximum Simultaneous',
+        format: Number,
+        default: 10,
+        env: 'NODE_SERVER_UPLOAD_MAX'
       }
     },
     keys: {
@@ -114,8 +122,26 @@ const schema = convict({
     env: 'NODE_TIMEZONE'
   },
   jwt: {
+    issuer: {
+      doc: 'JWT Issuer',
+      format: String,
+      default: package.name,
+      env: 'JWT_ISSUER'
+    },
+    audience: {
+      doc: 'JWT Audience',
+      format: String,
+      default: '1f3730ca-776a-4420-ad17-cf0acb31d10c',
+      env: 'JWT_EXPIRED'
+    },
     expired: {
-      doc: 'JWT Authentication Expiration',
+      doc: 'JWT Expiration',
+      format: String,
+      default: '1d',
+      env: 'JWT_EXPIRED'
+    },
+    refresh: {
+      doc: 'JWT Refresh Expiration',
       format: String,
       default: '1d',
       env: 'JWT_EXPIRED'
@@ -166,7 +192,7 @@ const schema = convict({
       default: '',
       env: 'STORE_DRIVER'
     },
-    endPoint: {
+    endpoint: {
       doc: 'Storage Endpoint',
       format: String,
       default: '',
@@ -205,8 +231,14 @@ const schema = convict({
     useSSL: {
       doc: 'Storage Use SSL',
       format: Boolean,
-      default: false,
+      default: true,
       env: 'STORE_USE_SSL'
+    },
+    expired: {
+      doc: 'Storage Private URL Expiration',
+      format: Number,
+      default: 60,
+      env: 'STORE_URL_EXPIRED'
     }
   }
 })
