@@ -47,7 +47,6 @@ async function storeLink(req, res) {
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  index,
   storeFile,
   storeMultiFile,
   storeLink
