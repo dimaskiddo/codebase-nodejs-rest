@@ -54,13 +54,6 @@ app.use(function (req, res, next) {
   next()
 })
 
-app.use(function (req, res, next) {
-  if (req.url !== '/favicon.ico') {
-    log.send('http-access').info('Access Method ' + req.method + ' at URI ' + req.url)
-  }
-  next()
-})
-
 
 // -------------------------------------------------
 // Load Router Handler to Express Module
