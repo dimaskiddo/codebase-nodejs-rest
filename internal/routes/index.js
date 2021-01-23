@@ -21,13 +21,13 @@ router.get('/', ctlIndex.index)
 router.get('/health', ctlIndex.health)
 
 router.get('/auth', basic.auth, ctlAuth.index)
-router.get('/auth/refresh', jwt.authRefresh, ctlAuth.refresh)
+router.get('/auth/refresh', jwt.refresh, ctlAuth.refresh)
 
-router.get('/users', jwt.authClaims, ctlUsers.index)
+router.get('/users', jwt.auth, ctlUsers.index)
 
-router.post('/stores/:bucketName', jwt.authClaims, store.storeToLocal.single('file'), ctlStores.storeFile)
-router.post('/stores/:bucketName/multi', jwt.authClaims, store.storeToLocal.array('file', config.schema.get('server.upload.max')), ctlStores.storeMultiFile)
-router.get('/stores/:bucketName/link', jwt.authClaims, ctlStores.storeLink)
+router.post('/stores/:bucketName', jwt.auth, store.storeToLocal.single('file'), ctlStores.storeFile)
+router.post('/stores/:bucketName/bulk', jwt.auth, store.storeToLocal.array('file', config.schema.get('server.upload.max')), ctlStores.storeFileBulk)
+router.get('/stores/:bucketName/link', jwt.auth, ctlStores.storeLink)
 
 
 // -------------------------------------------------

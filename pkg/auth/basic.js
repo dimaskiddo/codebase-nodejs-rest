@@ -4,11 +4,13 @@ const log = require('../utils/logger')
 
 // -------------------------------------------------
 // Auth Basic Middleware Function
-function auth(req, res, next) {
+async function auth(req, res, next) {
+  let ctx = 'auth-basic'
+
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Basic "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
-    log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
+    log.warn(ctx, 'Unauthorized Method ' + req.method + ' at URI ' + req.url)
     response.resAuthenticate(res)
     return
   }
@@ -23,7 +25,7 @@ function auth(req, res, next) {
   // Check Credentials Section
   // It Should Have 2 Section, Username and Password
   if (authCredentials.length !== 2) {
-    log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
+    log.warn(ctx, 'Invalid Authorization Method ' + req.method + ' at URI ' + req.url)
     response.resBadRequest(res)
     return
   }

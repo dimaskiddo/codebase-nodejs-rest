@@ -33,6 +33,7 @@
   },
   "store": {
     "driver": "",
+    "endPoint": "",
     "accessKey": "",
     "secretKey": ""
   }

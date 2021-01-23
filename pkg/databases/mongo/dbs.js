@@ -12,7 +12,9 @@ var dbPool, dbConnenction
 
 // -------------------------------------------------
 // DB Get Connection Function
-async function getConnection() {
+function getConnection() {
+  let ctx = 'mongo-db-get-connection'
+
   if (dbConnenction === undefined) {
     let dbURI
 
@@ -31,26 +33,21 @@ async function getConnection() {
       useNewUrlParser: true
     }
 
-    try {
-      dbPool = await mongo.connect(dbURI, dbOptions)
+    dbPool = mongo.connect(dbURI, dbOptions)
 
-      if (! dbPool.isConnected()){
-        log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Connection')
-        process.exit(1)
-      }
-
-      dbConnenction = dbPool.db(config.schema.get('db.name'))
-
-      if (! await getPing()) {
-        log.send('mongo-db-get-connection').error('Cannot Get Mongo Database Ping')
-        process.exit(1)
-      }
-
-      return dbConnenction
-    } catch(err) {
-      log.send('mongo-db-get-connection').error(common.strToTitleCase(err.message))
+    if (! dbPool.isConnected()) {
+      log.error(ctx, 'Cannot Get Mongo Database Connection')
       process.exit(1)
     }
+
+    dbConnenction = dbPool.db(config.schema.get('db.name'))
+
+    if (! getPing()) {
+      log.error(ctx, 'Cannot Get Mongo Database Ping')
+      process.exit(1)
+    }
+
+    return dbConnenction
   } else {
     return dbConnenction
   }
@@ -59,13 +56,15 @@ async function getConnection() {
 
 // -------------------------------------------------
 // DB Get Ping Function
-async function getPing() {
+function getPing() {
+  let ctx = 'mongo-db-get-ping'
+
   try {
     if (dbPool !== undefined) {
       if (dbPool.isConnected()) {
         if (dbConnenction !== undefined) {
           let dbAdmin = dbConnenction.admin()  
-          let dbStatus = await dbAdmin.ping()
+          let dbStatus = dbAdmin.ping()
           
           if (dbStatus.ok === 1) {
             return true
@@ -76,8 +75,7 @@ async function getPing() {
 
     return false
   } catch(err) {
-    log.send('mongo-db-get-ping').error(common.strToTitleCase(err.message))
-    return false
+    log.error(ctx, common.strToTitleCase(err.message))
   }
 }
 
@@ -85,14 +83,16 @@ async function getPing() {
 // -------------------------------------------------
 // DB Close Connection Function
 function closeConnection(){
+  let ctx = 'mongo-db-close-connection'
+
   try {
     if (dbPool !== undefined) {
       dbPool.close()
     }
 
-    log.send('mongo-db-close-connection').error('Successfully Close Mongo Database Connection')
+    log.error(ctx, 'Successfully Close Mongo Database Connection')
   } catch(err) {
-    log.send('mongo-db-close-connection').error(common.strToTitleCase(err.message))
+    log.error(ctx, common.strToTitleCase(err.message))
   }
 }
 

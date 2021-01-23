@@ -21,16 +21,8 @@ const jwtRefreshOptions = {
 
 
 // -------------------------------------------------
-// Auth JWT Middleware Function
-function auth(req, res) {
-  // Check HTTP Header Authorization Section
-  // The First Authorization Section Should Contain "Bearer "
-  if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
-    log.send('http-access').warn('Unauthorized Method ' + req.method + ' at URI ' + req.url)
-    response.resUnauthorized(res)
-    return
-  }
-
+// Auth JWT Claim Function
+function claim(req) {
   // The Second Authorization Section Should Be The Credentials Payload
   let authPayload = req.headers.authorization.split(' ')[1]
 
@@ -41,11 +33,21 @@ function auth(req, res) {
 
 
 // -------------------------------------------------
-// Auth JWT Claims Middleware Function
-function authClaims(req, res, next) {
+// Auth JWT Auth Middleware Function
+async function auth(req, res, next) {
+  let ctx = 'auth-jwt'
+
+  // Check HTTP Header Authorization Section
+  // The First Authorization Section Should Contain "Bearer "
+  if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
+    log.warn(ctx, 'Unauthorized Method ' + req.method + ' at URI ' + req.url)
+    response.resUnauthorized(res)
+    return
+  }
+
   // Get Authorization Claims From JWT Token
   // And Stringify Data to JSON Format
-  let authClaims = auth(req, res)
+  let authClaims = claim(req)
 
   // Set Extracted Authorization Claims to HTTP Header
   // With RSA Encryption
@@ -58,14 +60,24 @@ function authClaims(req, res, next) {
 
 // -------------------------------------------------
 // Auth JWT Refresh Middleware Function
-function authRefresh(req, res, next) {
+async function refresh(req, res, next) {
+  let ctx = 'auth-jwt-refresh'
+
+  // Check HTTP Header Authorization Section
+  // The First Authorization Section Should Contain "Bearer "
+  if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
+    log.warn(ctx, 'Unauthorized Method ' + req.method + ' at URI ' + req.url)
+    response.resUnauthorized(res)
+    return
+  }
+
   // Get Authorization Claims From JWT Token
   // And Stringify Data to JSON Format
-  let authRefresh = auth(req, res)
+  let authRefreshClaims = claim(req)
 
   // Set Extracted Authorization Claims to HTTP Header
   // With RSA Encryption
-  res.set('X-JWT-Refresh', crypt.encryptWithRSA(authRefresh))
+  res.set('X-JWT-Refresh', crypt.encryptWithRSA(authRefreshClaims))
   
   // Call Next Handler Function With Current Request
   next()
@@ -74,21 +86,21 @@ function authRefresh(req, res, next) {
 
 // -------------------------------------------------
 // Get JWT Token Function
-function getToken(payload) {
+async function getToken(payload) {
   return jwt.sign({data: payload}, crypt.keyPrivate, jwtOptions)
 }
 
 
 // -------------------------------------------------
 // Get JWT Refresh Token Function
-function getRefreshToken(payload) {
+async function getRefreshToken(payload) {
   return jwt.sign({data: payload}, crypt.keyPrivate, jwtRefreshOptions)
 }
 
 
 // -------------------------------------------------
 // Get JWT Claims Function
-function getClaims(data) {
+async function getClaims(data) {
   return JSON.parse(crypt.decryptWithRSA(data))
 }
 
@@ -96,8 +108,8 @@ function getClaims(data) {
 // -------------------------------------------------
 // Export Module
 module.exports = {
-  authClaims,
-  authRefresh,
+  auth,
+  refresh,
   getToken,
   getRefreshToken,
   getClaims

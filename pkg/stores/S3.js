@@ -27,7 +27,7 @@ function getConnection() {
         break
       case 'minio':
         connection = new minio.Client({
-          endPoint: config.schema.get('store.endpoint'),
+          endPoint: config.schema.get('store.endPoint'),
           accessKey: config.schema.get('store.accessKey'),
           secretKey: config.schema.get('store.secretKey'),
           port: config.schema.get('store.port'),
@@ -43,6 +43,8 @@ function getConnection() {
 // -------------------------------------------------
 // Store Add File Upload Function
 async function addFileUpload(bucketName, fileName, filePath) {
+  let ctx = 'store-s3-add-file-upload'
+
   if (connection !== undefined) {
     try {
       let bucketExist = await new Promise(function(resolve, reject) {
@@ -61,40 +63,24 @@ async function addFileUpload(bucketName, fileName, filePath) {
         })
 
         if (bucketCreate) {
-          log.send('store-s3-add-file-upload').info('Successfully Create Bucket ' + bucketName)
+          log.info(ctx, 'Successfully Create Bucket ' + bucketName)
         } else {
-          log.send('store-s3-add-file-upload').error('Failed To Get Bucket')
+          log.error(ctx, 'Failed To Get Bucket')
           return false  
         }
       }
 
-      let errPutObject = await new Promise(function(resolve, reject) {
-        connection.fPutObject(bucketName, common.strSpaceToUnderscore(fileName), filePath, function(err) {
-          if (err) reject(true)
-          resolve(false)
-        })
-      })
+      await connection.fPutObject(bucketName, common.strSpaceToUnderscore(fileName), filePath)
+      fs.unlinkSync(filePath)
 
-      if (errPutObject) {
-        log.send('store-s3-add-file-upload').error('Failed To Put Object')
-        return false
-      } else {
-        await new Promise(function(resolve, reject) {
-          fs.unlink(filePath, function(err) {
-            if (err) reject(err)
-            resolve(true)
-          })
-        })
-      }
-
-      log.send('store-s3-add-file-upload').info('Successfully Put Object \'' + fileName + '\'')
+      log.info(ctx, 'Successfully Put Object \'' + fileName + '\'')
       return true
     } catch(err) {
-      log.send('store-s3-add-file-upload').error(common.strToTitleCase(err.message))
+      log.error(ctx, common.strToTitleCase(err.message))
       return false
     }
   } else {
-    log.send('store-s3-add-file-upload').error('Cannot Get Store Connection')
+    log.error(ctx, 'Cannot Get Store Connection')
     return false
   }
 }
@@ -103,18 +89,20 @@ async function addFileUpload(bucketName, fileName, filePath) {
 // -------------------------------------------------
 // Store Get File Private URL Function
 async function getFilePrivateURL(bucketName, fileName) {
+  let ctx = 'store-s3-get-file-url'
+
   if (connection !== undefined) {
-    switch (config.schema.get('store.driver')) {
-      case 'aws', 'minio':
-        return await new Promise(function(resolve, reject) {
-          connection.presignedGetObject(bucketName, fileName, config.schema.get('store.expired'), function(err, url) {
-            if (err) reject(err)
-            resolve(url)
-          })
-        })
+    try {
+      switch (config.schema.get('store.driver')) {
+        case 'aws', 'minio':
+          return connection.presignedGetObject(bucketName, fileName, config.schema.get('store.expired'))
+      }
+    } catch(err) {
+      log.error(ctx, common.strToTitleCase(err.message))
+      return false
     }
   } else {
-    log.send('store-s3-get-file-url').error('Cannot Get Store Connection')
+    log.error(ctx, 'Cannot Get Store Connection')
     return false
   }
 }
@@ -122,7 +110,9 @@ async function getFilePrivateURL(bucketName, fileName) {
 
 // -------------------------------------------------
 // Store Get File Public URL Function
-function getFilePublicURL(bucketName, fileName) {
+async function getFilePublicURL(bucketName, fileName) {
+  let ctx = 'store-s3-get-file-url'
+  
   if (connection !== undefined) {
     switch (config.schema.get('store.driver')) {
       case 'aws':
@@ -137,7 +127,7 @@ function getFilePublicURL(bucketName, fileName) {
                 bucketName + '/' + fileName
     }
   } else {
-    log.send('store-s3-get-file-url').error('Cannot Get Store Connection')
+    log.error(ctx, 'Cannot Get Store Connection')
     return false
   }
 }

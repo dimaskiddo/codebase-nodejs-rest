@@ -4,43 +4,63 @@ const store = require('../../../../pkg/stores/S3')
 
 const common = require('../../../../pkg/utils/common')
 const response = require('../../../../pkg/utils/response')
+const log = require('../../../../pkg/utils/logger')
 
 
 // -------------------------------------------------
 // Store File Function
 async function storeFile(req, res) {
-  // Store File
-  let isUploaded = await store.addFileUpload(req.params.bucketName, req.file.originalname, req.file.path)
+  let ctx = 'controller-store-file'
 
-  if (isUploaded) {
-    response.resSuccess(res)
-  } else {
-    response.resInternalError(res)
+  try {
+    // Store File
+    let isUploaded = await store.addFileUpload(req.params.bucketName, req.file.originalname, req.file.path)
+
+    if (isUploaded) {
+      response.resSuccess(res)
+    } else {
+      response.resInternalError(res)
+    }
+  } catch(err) {
+    log.error(ctx, common.strToTitleCase(err.message))
+    response.resInternalError(res, common.strToTitleCase(err.message))
   }
 }
 
 
 // -------------------------------------------------
 // Store Multi File Function
-async function storeMultiFile(req, res) {
-  // Store Multi File
-  async.each(req.files, function(file) {
-    store.addFileUpload(req.params.bucketName, file.originalname, file.path)
-  }, function(err){
-    response.resInternalError(res, common.strToTitleCase(err.message))
-  })
+async function storeFileBulk(req, res) {
+  let ctx = 'controller-store-file-bulk'
 
-  response.resSuccess(res)
+  try {
+    // Store Multi File
+    await Promise.all(req.files.map(async (file) => {
+      await store.addFileUpload(req.params.bucketName, file.originalname, file.path)
+    }))
+  
+    response.resSuccess(res)
+  } catch(err) {
+    log.error(ctx, common.strToTitleCase(err.message))
+    response.resInternalError(res, common.strToTitleCase(err.message))
+  }  
 }
 
 
 // -------------------------------------------------
 // User Store Link Function
 async function storeLink(req, res) {
-  // Get Store Link
-  let filePrivateURL = await store.getFilePrivateURL(req.params.bucketName, req.body.fileName)
+  let ctx = 'controller-store-link'
 
-  response.resSuccessData(res, {fileURL: filePrivateURL})
+  try {
+    // Get Store Link
+    let filePrivateURL = await store.getFilePrivateURL(req.params.bucketName, req.body.fileName)
+
+    response.resSuccessData(res, { fileURL: filePrivateURL })
+  } catch(err) {
+    log.error(ctx, common.strToTitleCase(err.message))
+    response.resInternalError(res, common.strToTitleCase(err.message))
+  }
 }
 
 
@@ -48,6 +68,6 @@ async function storeLink(req, res) {
 // Export Module
 module.exports = {
   storeFile,
-  storeMultiFile,
+  storeFileBulk,
   storeLink
 }

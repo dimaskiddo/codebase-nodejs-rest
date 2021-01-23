@@ -1,18 +1,18 @@
 const response = require('../../../../pkg/utils/response')
-const healthz = require('../../../../pkg/utils/health')
+const healthz = require('../../../../pkg/utils/healthz')
 
 
 // -------------------------------------------------
 // Index Root Function
-function index(req, res) {
+async function index(req, res) {
   response.resSuccess(res, 'Codebase NodeJS REST is running')
 }
 
 
 // -------------------------------------------------
 // Index Health Function
-function health(req, res) {
-  healthz.healthCheck(res)
+async function health(req, res) {
+  await healthz.healthCheck(res)
 }
 
 

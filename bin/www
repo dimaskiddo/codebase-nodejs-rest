@@ -14,6 +14,8 @@ const log = require('../pkg/utils/logger')
 const config = require('../pkg/config')
 const app = require('../pkg/app')
 
+const ctx = 'http-server'
+
 /**
  * Get port from environment and store in Express.
  */
@@ -32,7 +34,7 @@ const server = http.createServer(app)
  */
 
 if (cluster.isMaster) {
-  log.send('http-server').info('Server Master Started at PID ' + process.pid)
+  log.info(ctx, 'Server Master Started at PID ' + process.pid)
 
   if (config.schema.get('workers') == 0) {
     config.schema.set('workers', numCPUs)
@@ -43,12 +45,12 @@ if (cluster.isMaster) {
       cluster.fork()
     }
   } else {
-    log.send('http-server').error('Error! Worker number is greater than maximum CPUs')
+    log.error(ctx, 'Error! Worker number is greater than maximum CPUs')
     process.exit(1)
   }
 
   cluster.on('exit', (worker, code, signal) => {
-    log.send('http-server').warn('Server Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Server Worker')
+    log.warn(ctx, 'Server Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Server Worker')
     cluster.fork()
   })
 } else {
@@ -84,19 +86,19 @@ function onError(error) {
   let addr = server.address()
 
   if (error.syscall !== 'listen') {
-    log.send('http-server').error(common.strToTitleCase(error.message))
+    log.error(ctx, common.strToTitleCase(error.message))
   }
 
   // Handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      log.send('http-server').error('Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' Require Elevated Privileges')
+      log.error(ctx, 'Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' Require Elevated Privileges')
       break
     case 'EADDRINUSE':
-      log.send('http-server').error('Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' is Already in Use')
+      log.error(ctx, 'Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' is Already in Use')
       break
     default:
-      log.send('http-server').error(common.strToTitleCase(error.message))
+      log.error(ctx, common.strToTitleCase(error.message))
   }
 
   process.exit(1)
@@ -108,5 +110,5 @@ function onError(error) {
 
 function onListening() {
   let addr = server.address()
-  log.send('http-server').info('Server Worker Started at PID ' + process.pid + ' Listening on ' + addr.address + ':' + addr.port)
+  log.info(ctx, 'Server Worker Started at PID ' + process.pid + ' Listening on ' + addr.address + ':' + addr.port)
 }

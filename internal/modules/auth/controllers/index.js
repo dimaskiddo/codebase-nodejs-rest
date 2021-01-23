@@ -4,7 +4,7 @@ const response = require('../../../../pkg/utils/response')
 
 // -------------------------------------------------
 // Auth Index Function
-function index(req, res) {
+async function index(req, res) {
   let dataBody = JSON.parse(req.body)
 
   if (dataBody.username.length === 0 || dataBody.password.length === 0) {
@@ -13,22 +13,22 @@ function index(req, res) {
   }
 
   response.resSuccessData(res, {
-    token: jwt.getToken({username: dataBody.username}),
-    refreshToken: jwt.getRefreshToken({username: dataBody.username})
+    token: await jwt.getToken({username: dataBody.username}),
+    refreshToken: await jwt.getRefreshToken({username: dataBody.username})
   })
 }
 
 
 // -------------------------------------------------
 // Auth Refresh Function
-function refresh(req, res) {
+async function refresh(req, res) {
   // Parse JWT Claims from Header
-  let dataClaims = jwt.getClaims(res.get('X-JWT-Refresh'))
+  let dataClaims = await jwt.getClaims(res.get('X-JWT-Refresh'))
   
   // Response with JWT Claims
   response.resSuccessData(res, {
-    token: jwt.getToken({username: dataClaims.data.username}),
-    refreshToken: jwt.getRefreshToken({username: dataClaims.data.username})
+    token: await jwt.getToken({username: dataClaims.data.username}),
+    refreshToken: await jwt.getRefreshToken({username: dataClaims.data.username})
   })
 }
 

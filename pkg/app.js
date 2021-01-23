@@ -13,7 +13,7 @@ const response = require('./utils/response')
 const log = require('./utils/logger')
 
 const app = express()
-
+const ctx = 'service-main'
 
 // -------------------------------------------------
 // Database Module
@@ -65,12 +65,12 @@ app.use('/', require('../internal/routes/index'))
 app.get('/favicon.ico', (req, res) => res.status(204))
 
 app.use(function (req, res) {
-  log.send('http-access').warn('Not Found Method ' + req.method + ' at URI ' + req.url)
-  response.resNotFound(res, 'Not Found Method ' + req.method + ' at URI ' + req.url)
+  log.warn(ctx, 'No Method ' + req.method + ' at URI ' + req.url)
+  response.resNotFound(res, 'No Method ' + req.method + ' at URI ' + req.url)
 })
 
 app.use(function (err, req, res, next) {
-  log.send('http-access').error(common.strToTitleCase(err.message))
+  log.error(ctx, common.strToTitleCase(err.message))
   response.resInternalError(res, common.strToTitleCase(err.message))
 })
 

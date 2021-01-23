@@ -192,7 +192,7 @@ const schema = convict({
       default: '',
       env: 'STORE_DRIVER'
     },
-    endpoint: {
+    endPoint: {
       doc: 'Storage Endpoint',
       format: String,
       default: '',
@@ -242,6 +242,7 @@ const schema = convict({
     }
   }
 })
+
 schema.loadFile('./misc/configs/' + schema.get('env')  + '.json')
 schema.validate({allowed: 'strict'})
 env.config()
