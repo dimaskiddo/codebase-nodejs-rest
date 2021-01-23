@@ -97,7 +97,7 @@ function resNotFound(res, err) {
   err = err !== undefined ? err : 'Not Found'
 
   // Write Response
-  writeResponseError(res, 400, 'Not Found', err)
+  writeResponseError(res, 404, 'Not Found', err)
 }
 
 
