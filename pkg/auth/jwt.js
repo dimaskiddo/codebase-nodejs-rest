@@ -44,6 +44,8 @@ async function auth(req, res, next) {
       ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
       method: req.method,
       url: req.url,
+      system: req.useragent.platform + '/' + req.useragent.os,
+      agent: req.useragent.browser + '/' + req.useragent.version,
       error: 'Unauthorized'
     }
 
@@ -77,6 +79,8 @@ async function refresh(req, res, next) {
       ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
       method: req.method,
       url: req.url,
+      system: req.useragent.platform + '/' + req.useragent.os,
+      agent: req.useragent.browser + '/' + req.useragent.version,
       error: 'Unauthorized'
     }
 

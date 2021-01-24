@@ -14,11 +14,13 @@ async function auth(req, res, next) {
       ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
       method: req.method,
       url: req.url,
+      system: req.useragent.platform + '/' + req.useragent.os,
+      agent: req.useragent.browser + '/' + req.useragent.version,
       error: 'Unauthorized'
     }
   
     log.warn(ctx, logData)
-    response.resAuthenticate(res, logData.error)
+    response.resAuthenticate(res)
     return
   }
 
@@ -31,12 +33,15 @@ async function auth(req, res, next) {
 
   // Check Credentials Section
   // It Should Have 2 Section, Username and Password
-  if (authCredentials.length !== 2) {
+  // And It Should Not Empty
+  if (authCredentials[0] === '' ||  authCredentials[1] === '') {
     const logData = {
       ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
       method: req.method,
       url: req.url,
-      error: 'Invalid Authorixation'
+      system: req.useragent.platform + '/' + req.useragent.os,
+      agent: req.useragent.browser + '/' + req.useragent.version,
+      error: 'Invalid Authorization'
     }
 
     log.warn(ctx, logData)

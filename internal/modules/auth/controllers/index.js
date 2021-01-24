@@ -7,11 +7,6 @@ const response = require('../../../../pkg/utils/response')
 async function index(req, res) {
   let dataBody = JSON.parse(req.body)
 
-  if (dataBody.username.length === 0 || dataBody.password.length === 0) {
-    response.resBadRequest(res, 'Invalid Authorizaton')
-    return
-  }
-
   response.resSuccessData(res, {
     token: await jwt.getToken({username: dataBody.username}),
     refreshToken: await jwt.getRefreshToken({username: dataBody.username})

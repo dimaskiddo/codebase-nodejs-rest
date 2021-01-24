@@ -25,7 +25,7 @@ function writeResponseData(res, statusCode, msg, data) {
 // Write Error Response Function
 function writeResponseError(res, statusCode, msg, err) {
   res.status(statusCode).json({
-    status: true,
+    status: false,
     code: statusCode,
     message: msg,
     error: err

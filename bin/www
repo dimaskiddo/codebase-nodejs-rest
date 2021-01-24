@@ -34,7 +34,7 @@ const server = http.createServer(app)
  */
 
 if (cluster.isMaster) {
-  log.info(ctx, 'Server Master Started at PID ' + process.pid)
+  log.info(ctx, 'Master Started at PID ' + process.pid)
 
   if (config.schema.get('workers') == 0) {
     config.schema.set('workers', numCPUs)
@@ -50,7 +50,7 @@ if (cluster.isMaster) {
   }
 
   cluster.on('exit', (worker, code, signal) => {
-    log.warn(ctx, 'Server Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Server Worker')
+    log.warn(ctx, 'Worker Started at PID ' + worker.process.pid + ' Has Died, Restarting Worker')
     cluster.fork()
   })
 } else {
@@ -92,10 +92,10 @@ function onError(error) {
   // Handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      log.error(ctx, 'Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' Require Elevated Privileges')
+      log.error(ctx, 'Worker Started at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' Require Elevated Privileges')
       break
     case 'EADDRINUSE':
-      log.error(ctx, 'Server Worker at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' is Already in Use')
+      log.error(ctx, 'Worker Started at PID ' + process.pid + ' in Address ' + addr.address + ':' + addr.port + ' is Already in Use')
       break
     default:
       log.error(ctx, common.strToTitleCase(error.message))
@@ -110,5 +110,5 @@ function onError(error) {
 
 function onListening() {
   let addr = server.address()
-  log.info(ctx, 'Server Worker Started at PID ' + process.pid + ' Listening on ' + addr.address + ':' + addr.port)
+  log.info(ctx, 'Worker Started at PID ' + process.pid + ' Listen on ' + addr.address + ':' + addr.port)
 }

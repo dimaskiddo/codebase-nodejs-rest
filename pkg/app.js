@@ -1,4 +1,5 @@
 const express = require('express')
+const expressUA = require('express-useragent')
 const helmet = require('helmet')
 
 const config = require('./config')
@@ -14,6 +15,7 @@ const log = require('./utils/logger')
 
 const app = express()
 const ctx = 'http-server'
+
 
 // -------------------------------------------------
 // Database Module
@@ -47,6 +49,8 @@ app.use(express.urlencoded({
   limit: config.schema.get('server.upload.limit') + 'mb'
 }))
 
+app.use(expressUA.express())
+
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', config.schema.get('server.cors.origins'))
   res.header('Access-Control-Allow-Methods', config.schema.get('server.cors.methods'))
@@ -56,7 +60,9 @@ app.use(function (req, res, next) {
     const logData = {
       ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
       method: req.method,
-      url: req.url
+      url: req.url,
+      system: req.useragent.platform + '/' + req.useragent.os,
+      agent: req.useragent.browser + '/' + req.useragent.version
     }
   
     log.info(ctx, logData)
@@ -80,6 +86,8 @@ app.use(function (req, res) {
     ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
     method: req.method,
     url: req.url,
+    system: req.useragent.platform + '/' + req.useragent.os,
+    agent: req.useragent.browser + '/' + req.useragent.version,
     error: 'Not Found'
   }
 
@@ -92,6 +100,8 @@ app.use(function (err, req, res, next) {
     ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
     method: req.method,
     url: req.url,
+    system: req.useragent.platform + '/' + req.useragent.os,
+    agent: req.useragent.browser + '/' + req.useragent.version,
     error: common.strToTitleCase(err.message)
   }
 
