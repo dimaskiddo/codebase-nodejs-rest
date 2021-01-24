@@ -35,110 +35,111 @@ if (config.schema.get('log.logstash.node') !== '' &&
   })
 }
 
+
+// -------------------------------------------------
+// Log Meta Constant
+const meta = {
+  time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
+  service: package.name
+}
+
+
 // -------------------------------------------------
 // Log Debug Function
 function debug(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
 
-  logger.debug(logObj)
+  logger.debug(logData)
 }
 
 
 // -------------------------------------------------
 // Log Information Function
 function info(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
 
-  logger.info(logObj)
+  logger.info(logData)
 }
 
 
 // -------------------------------------------------
 // Log Notice Function
 function notice(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
 
-  logger.notice(logObj)
+  logger.notice(logData)
 }
 
 
 // -------------------------------------------------
 // Log Warning Function
 function warn(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
-  logger.warn(logObj)
+  logger.warn(logData)
 }
 
 
 // -------------------------------------------------
 // Log Error Function
 function error(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
-  logger.error(logObj)
+  logger.error(logData)
 }
 
 
 // -------------------------------------------------
 // Log Critical Function
 function crit(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
-  logger.crit(logObj)
+  logger.crit(logData)
 }
 
 
 // -------------------------------------------------
 // Log Alert Function
 function alert(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
-  logger.alert(logObj)
+  logger.alert(logData)
 }
 
 
 // -------------------------------------------------
 // Log Emergency Function
 function emerg(label, message) {
-  const logObj = {
-    time: moment().tz(config.schema.get('timezone')).format('YYYY-MM-DDTHH:mm:ss.SSSSSSSSSZ'),
-    service: package.name,
-    label: label,
-    message: message
+  const logData = {
+    meta,
+    label,
+    message
   }
-  logger.emerg(logObj)
+  logger.emerg(logData)
 }
 
 

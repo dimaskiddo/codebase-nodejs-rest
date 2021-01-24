@@ -14,7 +14,7 @@ const log = require('../pkg/utils/logger')
 const config = require('../pkg/config')
 const app = require('../pkg/app')
 
-const ctx = 'http-server'
+const ctx = 'service-main'
 
 /**
  * Get port from environment and store in Express.

@@ -10,8 +10,15 @@ async function auth(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Basic "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
-    log.warn(ctx, 'Unauthorized Method ' + req.method + ' at URI ' + req.url)
-    response.resAuthenticate(res)
+    const logData = {
+      ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+      method: req.method,
+      url: req.url,
+      error: 'Unauthorized'
+    }
+  
+    log.warn(ctx, logData)
+    response.resAuthenticate(res, logData.error)
     return
   }
 
@@ -25,8 +32,15 @@ async function auth(req, res, next) {
   // Check Credentials Section
   // It Should Have 2 Section, Username and Password
   if (authCredentials.length !== 2) {
-    log.warn(ctx, 'Invalid Authorization Method ' + req.method + ' at URI ' + req.url)
-    response.resBadRequest(res)
+    const logData = {
+      ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+      method: req.method,
+      url: req.url,
+      error: 'Invalid Authorixation'
+    }
+
+    log.warn(ctx, logData)
+    response.resBadRequest(res, logData.error)
     return
   }
 

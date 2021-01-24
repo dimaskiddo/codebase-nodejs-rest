@@ -13,7 +13,7 @@ const response = require('./utils/response')
 const log = require('./utils/logger')
 
 const app = express()
-const ctx = 'service-main'
+const ctx = 'http-server'
 
 // -------------------------------------------------
 // Database Module
@@ -51,6 +51,17 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', config.schema.get('server.cors.origins'))
   res.header('Access-Control-Allow-Methods', config.schema.get('server.cors.methods'))
   res.header('Access-Control-Allow-Headers', config.schema.get('server.cors.headers'))
+
+  if (req.url !== '/favicon.ico') {
+    const logData = {
+      ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+      method: req.method,
+      url: req.url
+    }
+  
+    log.info(ctx, logData)
+  }
+
   next()
 })
 
@@ -65,13 +76,27 @@ app.use('/', require('../internal/routes/index'))
 app.get('/favicon.ico', (req, res) => res.status(204))
 
 app.use(function (req, res) {
-  log.warn(ctx, 'No Method ' + req.method + ' at URI ' + req.url)
-  response.resNotFound(res, 'No Method ' + req.method + ' at URI ' + req.url)
+  const logData = {
+    ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+    method: req.method,
+    url: req.url,
+    error: 'Not Found'
+  }
+
+  log.warn(ctx, logData)
+  response.resNotFound(res, logData.error)
 })
 
 app.use(function (err, req, res, next) {
-  log.error(ctx, common.strToTitleCase(err.message))
-  response.resInternalError(res, common.strToTitleCase(err.message))
+  const logData = {
+    ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+    method: req.method,
+    url: req.url,
+    error: common.strToTitleCase(err.message)
+  }
+
+  log.error(ctx, logData)
+  response.resInternalError(res, logData.error)
 })
 
 

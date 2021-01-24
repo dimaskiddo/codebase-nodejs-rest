@@ -40,8 +40,15 @@ async function auth(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Bearer "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
-    log.warn(ctx, 'Unauthorized Method ' + req.method + ' at URI ' + req.url)
-    response.resUnauthorized(res)
+    const logData = {
+      ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+      method: req.method,
+      url: req.url,
+      error: 'Unauthorized'
+    }
+
+    log.warn(ctx, logData)
+    response.resUnauthorized(res, logData.error)
     return
   }
 
@@ -66,8 +73,15 @@ async function refresh(req, res, next) {
   // Check HTTP Header Authorization Section
   // The First Authorization Section Should Contain "Bearer "
   if (!req.headers.authorization || req.headers.authorization.indexOf('Bearer ') === -1) {
-    log.warn(ctx, 'Unauthorized Method ' + req.method + ' at URI ' + req.url)
-    response.resUnauthorized(res)
+    const logData = {
+      ip: (req.headers['x-forwarded-for'] || '').split(',')[0] || req.socket.remoteAddress,
+      method: req.method,
+      url: req.url,
+      error: 'Unauthorized'
+    }
+
+    log.warn(ctx, logData)
+    response.resUnauthorized(res, logData.error)
     return
   }
 

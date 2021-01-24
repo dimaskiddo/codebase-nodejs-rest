@@ -1,11 +1,14 @@
 const env = require('dotenv')
+
 const convict = require('convict')
+const convictValidator = require('convict-format-with-validator')
 
 const package = require('../package.json')
 
 
 // -------------------------------------------------
 // Configuration Schema Constant
+convict.addFormat(convictValidator.ipaddress)
 const schema = convict({
   env: {
     doc: 'The Application Environment',
