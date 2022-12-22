@@ -23,7 +23,7 @@
     "express": "~4.16.0",
     "express-useragent": "^1.0.15",
     "helmet": "^3.21.2",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^9.0.0",
     "minio": "^7.0.5",
     "moment-timezone": "^0.5.23",
     "mongodb": "^3.1.13",
